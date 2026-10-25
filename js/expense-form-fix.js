@@ -9,10 +9,23 @@ document.addEventListener("DOMContentLoaded",()=>{
       form.reportValidity();
       return;
     }
-    form.requestSubmit();
+
+    try{
+      const handler=form.onsubmit;
+      if(typeof handler!=="function"){
+        throw new Error("O formulário de despesas não foi inicializado.");
+      }
+      handler.call(form,{preventDefault(){},target:form,currentTarget:form});
+    }catch(error){
+      console.error("Erro ao salvar despesa:",error);
+      alert("Não foi possível salvar a despesa. O sistema encontrou um erro e ele foi registrado.");
+    }
   });
 
   window.addEventListener("error",event=>{
     console.error("Erro no sistema:",event.error||event.message);
+  });
+  window.addEventListener("unhandledrejection",event=>{
+    console.error("Erro assíncrono no sistema:",event.reason);
   });
 });
