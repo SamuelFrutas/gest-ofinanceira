@@ -16,25 +16,27 @@ document.addEventListener("DOMContentLoaded",()=>{
       return;
     }
 
+    const nativeDateToString=Date.prototype.toString;
+    let restored=false;
+    const restoreDate=()=>{
+      if(restored)return;
+      restored=true;
+      Date.prototype.toString=nativeDateToString;
+    };
+
     try{
-      const handler=form.onsubmit;
-      if(typeof handler!=="function"){
-        throw new Error("O formulário de despesas não foi inicializado.");
-      }
-
-      const nativeDateToString=Date.prototype.toString;
-      const restoreDate=()=>{Date.prototype.toString=nativeDateToString};
-
+      // addMonths/dateKey do app recebem tanto strings quanto objetos Date.
+      // Durante o envio, normalizamos a conversão de Date para YYYY-MM-DD,
+      // evitando Invalid Date nas despesas fixas e parcelas bancárias.
       Date.prototype.toString=function(){
         return this.toISOString().slice(0,10);
       };
 
-      try{
-        handler.call(form,{preventDefault(){},target:form,currentTarget:form});
-      }finally{
-        restoreDate();
-      }
+      const event=new Event("submit",{bubbles:true,cancelable:true});
+      form.dispatchEvent(event);
+      setTimeout(restoreDate,0);
     }catch(error){
+      restoreDate();
       console.error("Erro ao salvar despesa:",error);
       alert("Não foi possível salvar a despesa. O sistema encontrou um erro e ele foi registrado.");
     }
