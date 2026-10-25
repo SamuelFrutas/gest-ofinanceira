@@ -4,7 +4,8 @@ import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "htt
 const auth = getAuth(getApp());
 const $ = id => document.getElementById(id);
 
-async function loginEmail(){
+async function loginEmail(event){
+  event?.preventDefault();
   const email = $("loginEmail").value.trim();
   const password = $("loginPassword").value;
   const button = $("loginButton");
@@ -51,8 +52,5 @@ async function resetPassword(){
   }
 }
 
-$("loginButton").onclick = loginEmail;
-$("resetPassword").onclick = resetPassword;
-$("loginPassword").addEventListener("keydown", event => {
-  if(event.key === "Enter") loginEmail();
-});
+$("loginForm").addEventListener("submit", loginEmail);
+$("resetPassword").addEventListener("click", resetPassword);
