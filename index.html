@@ -1,72 +1,29 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#16a34a" />
-  <title>Gestão Financeira</title>
-  <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><meta name="theme-color" content="#16a34a">
+  <title>Gestão Financeira</title><link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="topbar">
-    <div>
-      <span class="eyebrow">GESTÃO FINANCEIRA</span>
-      <h1>Minhas Finanças</h1>
-    </div>
-    <button class="menu-btn" aria-label="Abrir menu">☰</button>
-  </header>
-
-  <main class="container">
-    <section class="month-card">
-      <button id="prevMonth" aria-label="Mês anterior">‹</button>
-      <strong id="monthLabel">Outubro 2026</strong>
-      <button id="nextMonth" aria-label="Próximo mês">›</button>
-    </section>
-
-    <section class="summary-grid">
-      <article class="summary primary"><span>Total de despesas</span><strong id="totalExpenses">R$ 0,00</strong></article>
-      <article class="summary"><span>Pessoais</span><strong id="personalExpenses">R$ 0,00</strong></article>
-      <article class="summary"><span>Empresa</span><strong id="companyExpenses">R$ 0,00</strong></article>
-      <article class="summary tithe"><span>Dízimo</span><strong id="titheValue">R$ 0,00</strong></article>
-    </section>
-
-    <section class="actions">
-      <button class="action" id="newExpense">＋<span>Nova despesa</span></button>
-      <button class="action" id="openCards">▣<span>Cartões</span></button>
-      <button class="action" id="openReports">▤<span>Relatórios</span></button>
-      <button class="action" id="openTithe">♡<span>Dízimo</span></button>
-    </section>
-
-    <section class="panel">
-      <div class="panel-head"><h2>Despesas recentes</h2><button id="seeAll">Ver todas</button></div>
-      <div id="expenseList" class="expense-list"><div class="empty">Nenhuma despesa cadastrada.</div></div>
-    </section>
-
-    <section class="panel categories">
-      <div class="panel-head"><h2>Resumo por categoria</h2></div>
-      <div id="categoryList" class="category-list"><div class="empty">Cadastre despesas para ver o resumo.</div></div>
-    </section>
-  </main>
-
-  <button class="fab" id="fab" aria-label="Nova despesa">＋</button>
-
-  <div class="modal hidden" id="expenseModal">
-    <div class="modal-card">
-      <div class="modal-head"><h2>Nova despesa</h2><button id="closeModal">×</button></div>
-      <form id="expenseForm">
-        <label>Descrição<input name="description" required placeholder="Ex.: Supermercado" /></label>
-        <div class="two-cols">
-          <label>Valor<input name="amount" required inputmode="decimal" placeholder="0,00" /></label>
-          <label>Data<input name="date" type="date" required /></label>
-        </div>
-        <label>Categoria<select name="category"><option>Alimentação</option><option>Casa</option><option>Transporte</option><option>Saúde</option><option>Educação</option><option>Lazer</option><option>Trabalho</option><option>Outros</option></select></label>
-        <label>Tipo<select name="type"><option value="Pessoal">Pessoal</option><option value="Empresa">Empresa</option></select></label>
-        <label>Forma de pagamento<select name="payment"><option>Conta bancária</option><option>Cartão de crédito</option><option>Dinheiro</option><option>Fiado / acordo</option><option>Cheque</option><option>Outro</option></select></label>
-        <button class="save-btn" type="submit">Salvar despesa</button>
-      </form>
-    </div>
-  </div>
-
-  <script src="app.js"></script>
-</body>
-</html>
+<header class="topbar"><div><span class="eyebrow">GESTÃO FINANCEIRA</span><h1>Minhas Finanças</h1></div><button class="menu-btn" id="menuBtn">☰</button></header>
+<nav class="drawer hidden" id="drawer"><button data-page="dashboard">🏠 Início</button><button data-page="expenses">💰 Despesas</button><button data-page="cards">💳 Cartões</button><button data-page="reports">📊 Relatórios</button><button data-page="tithe">❤️ Dízimo</button><button data-page="settings">⚙️ Configurações</button></nav>
+<main class="container">
+<section id="dashboard" class="page">
+<div class="month-card"><button id="prevMonth">‹</button><strong id="monthLabel"></strong><button id="nextMonth">›</button></div>
+<div class="summary-grid"><article class="summary primary"><span>Total de despesas</span><strong id="totalExpenses">R$ 0,00</strong></article><article class="summary"><span>Pessoais</span><strong id="personalExpenses">R$ 0,00</strong></article><article class="summary"><span>Empresa</span><strong id="companyExpenses">R$ 0,00</strong></article><article class="summary tithe"><span>Dízimo</span><strong id="titheValue">R$ 0,00</strong></article></div>
+<div class="actions"><button class="action" id="newExpense">＋ Nova despesa</button><button class="action" data-go="cards">💳 Cartões</button><button class="action" data-go="reports">📊 Relatórios</button><button class="action" data-go="tithe">❤️ Dízimo</button></div>
+<section class="panel"><div class="panel-head"><h2>Despesas recentes</h2><button data-go="expenses">Ver todas</button></div><div id="expenseList"></div></section>
+<section class="panel"><div class="panel-head"><h2>Resumo por categoria</h2></div><div id="categoryList"></div></section>
+</section>
+<section id="expenses" class="page hidden"><div class="page-title"><div><h2>Despesas</h2><p>Consulte, filtre e organize seus gastos.</p></div><button class="primary-btn" id="newExpense2">＋ Nova despesa</button></div><div class="filters"><input id="expenseSearch" placeholder="Buscar despesa..."><select id="typeFilter"><option value="">Todos os tipos</option><option>Pessoal</option><option>Empresa</option></select><select id="paymentFilter"><option value="">Todas as formas</option><option>Conta bancária</option><option>Cartão de crédito</option><option>Dinheiro</option><option>Fiado / acordo</option><option>Cheque</option><option>Outro</option></select></div><div class="panel"><div id="allExpenses"></div><div class="total-line">Total selecionado: <strong id="filteredTotal">R$ 0,00</strong></div></div></section>
+<section id="cards" class="page hidden"><div class="page-title"><div><h2>Cartões</h2><p>Gerencie seus cartões e acompanhe as faturas.</p></div><button class="primary-btn" id="addCard">＋ Novo cartão</button></div><div id="cardsList"></div></section>
+<section id="cardDetail" class="page hidden"><div class="page-title"><div><button class="back" data-go="cards">← Cartões</button><h2 id="cardTitle">Fatura</h2></div></div><div class="panel"><div class="invoice-head"><strong id="invoiceMonth"></strong><strong id="invoiceTotal">R$ 0,00</strong></div><div id="invoiceItems"></div><div class="adjust"><h3>Reajustar fatura</h3><p>Corrija a diferença entre o total calculado e o valor real da fatura sem alterar as compras.</p><div class="two-cols"><input id="actualInvoice" inputmode="decimal" placeholder="Valor real da fatura"><button class="primary-btn" id="adjustInvoice">Aplicar ajuste</button></div><div id="adjustmentInfo"></div></div></div></section>
+<section id="reports" class="page hidden"><div class="page-title"><div><h2>Relatórios</h2><p>Períodos de domingo a sábado.</p></div></div><div class="filters"><select id="reportPeriod"><option value="week">Semana atual</option><option value="prevweek">Semana anterior</option><option value="month">Mês atual</option></select></div><div class="summary-grid"><article class="summary"><span>Total</span><strong id="reportTotal">R$ 0,00</strong></article><article class="summary"><span>Pessoal</span><strong id="reportPersonal">R$ 0,00</strong></article><article class="summary"><span>Empresa</span><strong id="reportCompany">R$ 0,00</strong></article></div><div class="panel"><h3>Despesas por dia</h3><div id="dailyReport"></div></div></section>
+<section id="tithe" class="page hidden"><div class="page-title"><div><h2>Dízimo</h2><p>Cálculo baseado somente nas despesas pessoais.</p></div></div><div class="tithe-card"><span>Valor a pagar</span><strong id="tithePageValue">R$ 0,00</strong><small id="titheBasis"></small></div></section>
+<section id="settings" class="page hidden"><div class="page-title"><div><h2>Configurações</h2><p>Personalize o funcionamento do sistema.</p></div></div><div class="panel form-panel"><label>Percentual do dízimo<input id="tithePercent" type="number" min="0" step="0.1" value="10"></label><h3>Categorias</h3><div class="inline"><input id="newCategory" placeholder="Nova categoria"><button class="primary-btn" id="addCategory">Adicionar</button></div><div id="categorySettings"></div></div></section>
+</main>
+<button class="fab" id="fab">＋</button>
+<div class="modal hidden" id="expenseModal"><div class="modal-card"><div class="modal-head"><h2>Nova despesa</h2><button id="closeModal">×</button></div><form id="expenseForm"><label>Descrição<input name="description" required placeholder="Ex.: Supermercado"></label><div class="two-cols"><label>Valor<input name="amount" required inputmode="decimal" placeholder="0,00"></label><label>Data<input name="date" type="date" required></label></div><label>Categoria<select name="category" id="expenseCategory"></select></label><label>Tipo<select name="type"><option>Pessoal</option><option>Empresa</option></select></label><label>Forma de pagamento<select name="payment"><option>Conta bancária</option><option>Cartão de crédito</option><option>Dinheiro</option><option>Fiado / acordo</option><option>Cheque</option><option>Outro</option></select></label><label><input type="checkbox" name="installment"> Compra parcelada</label><div id="installmentFields" class="hidden"><div class="two-cols"><label>Parcelas<input name="installments" type="number" min="2" value="2"></label><label>Intervalo<select name="interval"><option value="month">Mensal</option><option value="week">Semanal</option></select></label></div></div><label>Observação<input name="note" placeholder="Opcional"></label><button class="save-btn" type="submit">Salvar despesa</button></form></div></div>
+<div class="modal hidden" id="cardModal"><div class="modal-card"><div class="modal-head"><h2>Novo cartão</h2><button id="closeCardModal">×</button></div><form id="cardForm"><label>Nome do cartão<input name="name" required placeholder="Ex.: Cartão principal"></label><label>Banco / instituição<input name="bank"></label><label>Últimos 4 dígitos<input name="last4" maxlength="4" inputmode="numeric"></label><label>Limite<input name="limit" inputmode="decimal" placeholder="0,00"></label><div class="two-cols"><label>Fechamento<input name="closing" type="number" min="1" max="31"></label><label>Vencimento<input name="due" type="number" min="1" max="31"></label></div><button class="save-btn">Salvar cartão</button></form></div></div>
+<script src="app.js"></script>
+</body></html>
