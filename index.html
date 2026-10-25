@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#16a34a" />
+  <title>Gestão Financeira</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <span class="eyebrow">GESTÃO FINANCEIRA</span>
+      <h1>Minhas Finanças</h1>
+    </div>
+    <button class="menu-btn" aria-label="Abrir menu">☰</button>
+  </header>
+
+  <main class="container">
+    <section class="month-card">
+      <button id="prevMonth" aria-label="Mês anterior">‹</button>
+      <strong id="monthLabel">Outubro 2026</strong>
+      <button id="nextMonth" aria-label="Próximo mês">›</button>
+    </section>
+
+    <section class="summary-grid">
+      <article class="summary primary"><span>Total de despesas</span><strong id="totalExpenses">R$ 0,00</strong></article>
+      <article class="summary"><span>Pessoais</span><strong id="personalExpenses">R$ 0,00</strong></article>
+      <article class="summary"><span>Empresa</span><strong id="companyExpenses">R$ 0,00</strong></article>
+      <article class="summary tithe"><span>Dízimo</span><strong id="titheValue">R$ 0,00</strong></article>
+    </section>
+
+    <section class="actions">
+      <button class="action" id="newExpense">＋<span>Nova despesa</span></button>
+      <button class="action" id="openCards">▣<span>Cartões</span></button>
+      <button class="action" id="openReports">▤<span>Relatórios</span></button>
+      <button class="action" id="openTithe">♡<span>Dízimo</span></button>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head"><h2>Despesas recentes</h2><button id="seeAll">Ver todas</button></div>
+      <div id="expenseList" class="expense-list"><div class="empty">Nenhuma despesa cadastrada.</div></div>
+    </section>
+
+    <section class="panel categories">
+      <div class="panel-head"><h2>Resumo por categoria</h2></div>
+      <div id="categoryList" class="category-list"><div class="empty">Cadastre despesas para ver o resumo.</div></div>
+    </section>
+  </main>
+
+  <button class="fab" id="fab" aria-label="Nova despesa">＋</button>
+
+  <div class="modal hidden" id="expenseModal">
+    <div class="modal-card">
+      <div class="modal-head"><h2>Nova despesa</h2><button id="closeModal">×</button></div>
+      <form id="expenseForm">
+        <label>Descrição<input name="description" required placeholder="Ex.: Supermercado" /></label>
+        <div class="two-cols">
+          <label>Valor<input name="amount" required inputmode="decimal" placeholder="0,00" /></label>
+          <label>Data<input name="date" type="date" required /></label>
+        </div>
+        <label>Categoria<select name="category"><option>Alimentação</option><option>Casa</option><option>Transporte</option><option>Saúde</option><option>Educação</option><option>Lazer</option><option>Trabalho</option><option>Outros</option></select></label>
+        <label>Tipo<select name="type"><option value="Pessoal">Pessoal</option><option value="Empresa">Empresa</option></select></label>
+        <label>Forma de pagamento<select name="payment"><option>Conta bancária</option><option>Cartão de crédito</option><option>Dinheiro</option><option>Fiado / acordo</option><option>Cheque</option><option>Outro</option></select></label>
+        <button class="save-btn" type="submit">Salvar despesa</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
