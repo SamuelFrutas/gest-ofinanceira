@@ -37,7 +37,7 @@ function askPayment(ids,description,amount,currentStatus,isInvoice=false){
   ok.classList.toggle("danger",!paid);
   pendingAction={ids:Array.isArray(ids)?ids:[ids],status:paid?"pago":"pendente"};
   ok.disabled=false;
-  ok.onclick=async e=>{e.preventDefault();const action=pendingAction;if(!action)return;ok.disabled=true;try{await updatePayments(action.ids,action.status)}catch(e){console.error(e);alert("Não foi possível atualizar o pagamento.");}finally{ok.disabled=false}};
+  ok.onclick=async e=>{e.preventDefault();e.stopPropagation();const action=pendingAction;if(!action)return;ok.disabled=true;try{await updatePayments(action.ids,action.status)}catch(e){console.error(e);alert("Não foi possível atualizar o pagamento.");}finally{ok.disabled=false}};
   document.getElementById("paymentConfirmModal").hidden=false;
 }
 async function updatePayments(ids,status){
@@ -45,7 +45,7 @@ async function updatePayments(ids,status){
   const ref=doc(db,"users",user.uid,"data","main"),snap=await getDoc(ref);if(!snap.exists())throw new Error("Dados não encontrados.");
   const data=snap.data(),expenses=Array.isArray(data.expenses)?[...data.expenses]:[];let changed=false;
   expenses.forEach(e=>{if(ids.includes(e.id)){e.status=status;changed=true}});
-  if(!changed)return;
+  if(!changed)throw new Error("Pagamento não encontrado.");
   await setDoc(ref,{...data,expenses,updatedAt:new Date().toISOString()});
   localStorage.setItem("gf_expenses",JSON.stringify(expenses));
   location.reload();
@@ -55,6 +55,20 @@ window.markExpensePaid=async id=>{let list=[];try{list=JSON.parse(localStorage.g
 document.addEventListener("click",event=>{
   const button=event.target.closest(".gf-toggle-bank");
   if(button){event.preventDefault();event.stopImmediatePropagation();let list=[];try{list=JSON.parse(localStorage.getItem("gf_expenses")||"[]")}catch{}const e=list.find(x=>x.id===button.dataset.id);if(e)askPayment(e.id,e.description,e.amount,e.status,false);return}
+
+  const paymentButton=event.target.closest("button.mini-btn");
+  if(paymentButton){
+    const text=(paymentButton.textContent||"").trim().toLowerCase();
+    if(text==="reabrir"||text==="marcar pago"){
+      event.preventDefault();event.stopImmediatePropagation();
+      const inline=paymentButton.getAttribute("onclick")||"";
+      const match=inline.match(/markExpensePaid\(['\"]([^'\"]+)['\"]\)/);
+      const id=match?.[1];
+      if(id){let list=[];try{list=JSON.parse(localStorage.getItem("gf_expenses")||"[]")}catch{}const e=list.find(x=>x.id===id);if(e)askPayment(e.id,e.description,e.amount,e.status,false)}
+      return;
+    }
+  }
+
   const invoiceButton=event.target.closest("#payInvoice,#reopenInvoice");
   if(!invoiceButton)return;
   event.preventDefault();event.stopImmediatePropagation();
