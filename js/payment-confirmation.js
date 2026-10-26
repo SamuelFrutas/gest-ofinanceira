@@ -17,12 +17,13 @@ function ensurePaymentModal(){
   modal.innerHTML=`<div class="gf-payment-dialog" role="dialog" aria-modal="true"><h3 id="paymentConfirmTitle">Confirmar pagamento</h3><p id="paymentConfirmText">Confirme esta alteração.</p><div class="gf-payment-info"><strong id="paymentConfirmDescription"></strong><span id="paymentConfirmAmount"></span></div><div class="gf-payment-actions"><button type="button" class="gf-payment-cancel" id="paymentConfirmCancel">Cancelar</button><button type="button" class="gf-payment-ok" id="paymentConfirmOk">Confirmar</button></div></div>`;
   document.body.appendChild(modal);
   modal.addEventListener("click",e=>{if(e.target===modal)closePaymentModal()});
-  document.getElementById("paymentConfirmCancel").addEventListener("click",e=>{e.preventDefault();e.stopPropagation();closePaymentModal()});
+  const cancel=document.getElementById("paymentConfirmCancel");
+  cancel.onclick=e=>{e.preventDefault();e.stopImmediatePropagation();closePaymentModal()};
 }
 let pendingAction=null;
 function closePaymentModal(){
   const m=document.getElementById("paymentConfirmModal");
-  if(m)m.hidden=true;
+  if(m){m.hidden=true;m.style.display="none";}
   pendingAction=null;
 }
 function askPayment(ids,description,amount,currentStatus,isInvoice=false){
@@ -37,8 +38,10 @@ function askPayment(ids,description,amount,currentStatus,isInvoice=false){
   ok.classList.toggle("danger",!paid);
   pendingAction={ids:Array.isArray(ids)?ids:[ids],status:paid?"pago":"pendente"};
   ok.disabled=false;
-  ok.onclick=async e=>{e.preventDefault();e.stopPropagation();const action=pendingAction;if(!action)return;ok.disabled=true;try{await updatePayments(action.ids,action.status)}catch(e){console.error(e);alert("Não foi possível atualizar o pagamento.");}finally{ok.disabled=false}};
-  document.getElementById("paymentConfirmModal").hidden=false;
+  ok.onclick=async e=>{e.preventDefault();e.stopImmediatePropagation();const action=pendingAction;if(!action)return;ok.disabled=true;try{await updatePayments(action.ids,action.status)}catch(e){console.error(e);alert("Não foi possível atualizar o pagamento.");}finally{ok.disabled=false}};
+  const modal=document.getElementById("paymentConfirmModal");
+  modal.hidden=false;
+  modal.style.display="flex";
 }
 async function updatePayments(ids,status){
   const user=auth.currentUser;if(!user)throw new Error("Usuário não autenticado.");
@@ -53,6 +56,9 @@ async function updatePayments(ids,status){
 window.markExpensePaid=async id=>{let list=[];try{list=JSON.parse(localStorage.getItem("gf_expenses")||"[]")}catch{}const e=list.find(x=>x.id===id);if(e)askPayment(e.id,e.description,e.amount,e.status,false)};
 
 document.addEventListener("click",event=>{
+  const modalCancel=event.target.closest?.("#paymentConfirmCancel");
+  if(modalCancel){event.preventDefault();event.stopImmediatePropagation();closePaymentModal();return}
+
   const button=event.target.closest(".gf-toggle-bank");
   if(button){event.preventDefault();event.stopImmediatePropagation();let list=[];try{list=JSON.parse(localStorage.getItem("gf_expenses")||"[]")}catch{}const e=list.find(x=>x.id===button.dataset.id);if(e)askPayment(e.id,e.description,e.amount,e.status,false);return}
 
