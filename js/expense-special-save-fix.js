@@ -43,3 +43,52 @@ document.addEventListener("submit",async event=>{
   const button=form.querySelector(".save-btn");if(button)button.disabled=true;
   try{await saveSpecialExpense(form);document.getElementById("expenseModal")?.classList.add("hidden");location.reload()}catch(error){console.error("Erro ao salvar despesa especial:",error);alert(error?.message||"Não foi possível salvar a despesa.");if(button)button.disabled=false}
 },true);
+
+function paymentConfirmationModal(){
+  let modal=document.getElementById("paymentConfirmModal");
+  if(modal)return modal;
+  modal=document.createElement("div");
+  modal.id="paymentConfirmModal";
+  modal.innerHTML=`<div class="payment-confirm-backdrop"></div><div class="payment-confirm-box" role="dialog" aria-modal="true" aria-labelledby="paymentConfirmTitle"><div class="payment-confirm-icon">✓</div><h3 id="paymentConfirmTitle">Confirmar pagamento</h3><p id="paymentConfirmText">Deseja realmente marcar esta despesa como paga?</p><div class="payment-confirm-actions"><button type="button" class="payment-confirm-cancel">Cancelar</button><button type="button" class="payment-confirm-ok">Marcar como pago</button></div></div>`;
+  const style=document.createElement("style");
+  style.textContent=`#paymentConfirmModal{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px}#paymentConfirmModal.hidden{display:none}.payment-confirm-backdrop{position:absolute;inset:0;background:rgba(15,23,42,.42);backdrop-filter:blur(2px)}.payment-confirm-box{position:relative;width:min(360px,100%);background:#fff;border-radius:18px;padding:22px;box-shadow:0 20px 60px rgba(15,23,42,.25);text-align:center;animation:paymentPop .16s ease-out}.payment-confirm-icon{width:42px;height:42px;margin:0 auto 10px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#dcfce7;color:#15803d;font-size:22px;font-weight:800}.payment-confirm-box h3{margin:0 0 7px;font-size:18px;color:#17221b}.payment-confirm-box p{margin:0;color:#64748b;font-size:14px;line-height:1.45}.payment-confirm-actions{display:flex;gap:9px;margin-top:18px}.payment-confirm-actions button{flex:1;border:0;border-radius:11px;padding:11px 10px;font-weight:700;cursor:pointer}.payment-confirm-cancel{background:#f1f5f9;color:#334155}.payment-confirm-ok{background:#16a34a;color:#fff}.payment-confirm-actions button:disabled{opacity:.6;cursor:not-allowed}@keyframes paymentPop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}`;
+  document.head.appendChild(style);document.body.appendChild(modal);return modal;
+}
+
+async function confirmAndMarkPaid(id,button){
+  const modal=paymentConfirmationModal();
+  modal.classList.remove("hidden");
+  const ok=modal.querySelector(".payment-confirm-ok"),cancel=modal.querySelector(".payment-confirm-cancel"),backdrop=modal.querySelector(".payment-confirm-backdrop");
+  const close=()=>{modal.classList.add("hidden");ok.disabled=false};
+  ok.disabled=false;
+  const expenseId=id;
+  const expenseName=JSON.parse(localStorage.getItem("gf_expenses")||"[]").find(e=>e.id===expenseId)?.description;
+  const text=modal.querySelector("#paymentConfirmText");if(text)text.textContent=expenseName?`Deseja realmente marcar “${expenseName}” como paga?`:"Deseja realmente marcar esta despesa como paga?";
+  const handler=async()=>{
+    ok.disabled=true;
+    try{
+      const user=auth.currentUser;if(!user)throw new Error("Usuário não autenticado.");
+      const ref=doc(db,"users",user.uid,"data","main"),snap=await getDoc(ref);if(!snap.exists())throw new Error("Dados financeiros não encontrados.");
+      const data=snap.data(),expenses=Array.isArray(data.expenses)?[...data.expenses]:[],item=expenses.find(e=>e.id===expenseId);if(!item)throw new Error("Despesa não encontrada.");
+      item.status="pago";
+      await setDoc(ref,{...data,expenses,updatedAt:new Date().toISOString()});
+      localStorage.setItem("gf_expenses",JSON.stringify(expenses));
+      close();
+      if(typeof window.renderAllVisible==="function")window.renderAllVisible();
+      else window.location.reload();
+    }catch(error){console.error("Erro ao confirmar pagamento:",error);alert(error?.message||"Não foi possível marcar a despesa como paga.");ok.disabled=false}
+  };
+  ok.onclick=handler;cancel.onclick=close;backdrop.onclick=close;
+  const keyHandler=e=>{if(e.key==="Escape"){close();document.removeEventListener("keydown",keyHandler)}};document.addEventListener("keydown",keyHandler);
+}
+
+document.addEventListener("click",event=>{
+  const button=event.target.closest("button");if(!button)return;
+  const label=(button.textContent||"").trim().toLowerCase();
+  if(label!=="marcar pago")return;
+  let id=button.dataset.id||"";
+  if(!id){const onclick=button.getAttribute("onclick")||"";id=onclick.match(/markExpensePaid\(['\"]([^'\"]+)['\"]\)/)?.[1]||""}
+  if(!id)return;
+  event.preventDefault();event.stopImmediatePropagation();
+  confirmAndMarkPaid(id,button);
+},true);
