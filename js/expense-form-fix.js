@@ -50,13 +50,15 @@ function initFinanceUI(){
     const page=document.getElementById("expenses");if(!page||page.classList.contains("hidden"))return;
     const target=document.getElementById("allExpenses");if(!target)return;
     hideOldInvoicePanel();
-    const {expenses,cards}=data();
+    const {expenses,cards}=data(),mk=currentMonth();
     const q=(document.getElementById("expenseSearch")?.value||"").toLowerCase(),type=document.getElementById("typeFilter")?.value||"",payment=document.getElementById("paymentFilter")?.value||"",status=document.getElementById("statusFilter")?.value||"";
     const items=[];const cardGroups={};
     expenses.forEach(e=>{
       if(e.payment==="Cartão de crédito"){
-        const key=`${e.cardId||""}|${monthKey(e.dueDate||e.date)}`;(cardGroups[key]??={cardId:e.cardId,month:monthKey(e.dueDate||e.date),items:[]}).items.push(e);return
+        if(monthKey(e.dueDate||e.date)!==mk)return;
+        const key=`${e.cardId||""}|${mk}`;(cardGroups[key]??={cardId:e.cardId,month:mk,items:[]}).items.push(e);return
       }
+      if(monthKey(e.date)!==mk)return;
       if(q&&!`${e.description||""} ${e.category||""}`.toLowerCase().includes(q))return;if(type&&e.type!==type)return;if(payment&&payment!=="Conta bancária")return;if(status&&e.status!==status)return;
       items.push({kind:"bank",due:e.dueDate||e.date,e});
     });
