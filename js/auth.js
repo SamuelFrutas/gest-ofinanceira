@@ -1,55 +1,20 @@
 import { getApps, getApp, initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
 
-// O app principal e o módulo de login são carregados como módulos independentes.
-// Por isso, não podemos assumir que app.js já criou o Firebase App quando este
-// arquivo executar. Reutilizamos o app existente ou criamos o mesmo app uma vez.
 const firebaseConfig={apiKey:"AIzaSyA2-FFv1_kdi8Q_NfHi9uQMWfb6LYge1zKQ",authDomain:"gestaofinanceira-ee882.firebaseapp.com",projectId:"gestaofinanceira-ee882",storageBucket:"gestaofinanceira-ee882.firebasestorage.app",messagingSenderId:"334105279920",appId:"1:334105279920:web:97628313aabced377eea75"};
 const firebaseApp=getApps().length?getApp():initializeApp(firebaseConfig);
 const auth=getAuth(firebaseApp);
 const $=id=>document.getElementById(id);
 
-async function loginEmail(event){
-  event?.preventDefault();
-  const email=$("loginEmail")?.value.trim()||"";
-  const password=$("loginPassword")?.value||"";
-  const button=$("loginButton");
-  const error=$("loginError");
-  if(!email||!password){error.textContent="Informe seu e-mail e sua senha.";return}
-  try{
-    button.disabled=true;
-    error.style.color="";
-    error.textContent="Entrando...";
-    await signInWithEmailAndPassword(auth,email,password);
-  }catch(err){
-    console.error("Erro no login:",err);
-    const messages={
-      "auth/invalid-credential":"E-mail ou senha incorretos.",
-      "auth/invalid-email":"Informe um e-mail válido.",
-      "auth/too-many-requests":"Muitas tentativas. Aguarde alguns minutos e tente novamente.",
-      "auth/user-disabled":"Esta conta está desativada."
-    };
-    error.textContent=messages[err.code]||"Não foi possível entrar. Tente novamente.";
-    button.disabled=false;
-  }
+function setSignedIn(user){
+  document.body.classList.toggle("signed-out",!user);
+  $("loginScreen")?.classList.toggle("hidden",!!user);
+  document.querySelectorAll("body > header,body > nav,body > main,body > .fab").forEach(el=>el.classList.toggle("app-hidden",!user));
+  if(user)window.dispatchEvent(new CustomEvent("gf-auth-ready",{detail:{user}}));
 }
-
-async function resetPassword(){
-  const email=$("loginEmail")?.value.trim()||"";
-  const error=$("loginError");
-  if(!email){error.textContent="Informe seu e-mail para receber o link de redefinição.";$("loginEmail")?.focus();return}
-  try{
-    await sendPasswordResetEmail(auth,email);
-    error.style.color="#15803d";
-    error.textContent="Se esse e-mail estiver cadastrado, enviaremos as instruções para redefinir a senha.";
-  }catch(err){
-    console.error("Erro ao redefinir senha:",err);
-    error.style.color="#b91c1c";
-    error.textContent="Não foi possível enviar a redefinição agora.";
-  }
-}
-
-const form=$("loginForm");
-const reset=$("resetPassword");
-if(form)form.addEventListener("submit",loginEmail);
-if(reset)reset.addEventListener("click",resetPassword);
+function showError(text){const el=$("loginError");if(el)el.textContent=text}
+function message(e){const c=e?.code||"";if(c.includes("invalid-credential")||c.includes("wrong-password")||c.includes("user-not-found"))return"E-mail ou senha incorretos.";if(c.includes("invalid-email"))return"Informe um e-mail válido.";if(c.includes("too-many-requests"))return"Muitas tentativas. Aguarde alguns minutos e tente novamente.";if(c.includes("network-request-failed"))return"Sem conexão com a internet.";if(c.includes("user-disabled"))return"Esta conta está desativada.";return"Não foi possível entrar. Tente novamente."}
+async function login(e){e?.preventDefault();const email=$("loginEmail")?.value.trim()||"",password=$("loginPassword")?.value||"",button=$("loginButton");if(!email||!password){showError("Informe seu e-mail e sua senha.");return}if(button)button.disabled=true;showError("Entrando...");try{await signInWithEmailAndPassword(auth,email,password)}catch(err){console.error("LOGIN_ERROR",err);showError(message(err));if(button)button.disabled=false}}
+async function reset(){const email=$("loginEmail")?.value.trim()||"";if(!email){showError("Informe seu e-mail para receber o link de redefinição.");$("loginEmail")?.focus();return}try{await sendPasswordResetEmail(auth,email);showError("Se esse e-mail estiver cadastrado, enviaremos as instruções para redefinir a senha.")}catch(err){console.error(err);showError("Não foi possível enviar a redefinição agora.")}}
+function init(){const form=$("loginForm");if(form&&!form.dataset.authBound){form.dataset.authBound="1";form.addEventListener("submit",login)}const resetBtn=$("resetPassword");if(resetBtn&&!resetBtn.dataset.authBound){resetBtn.dataset.authBound="1";resetBtn.addEventListener("click",reset)}const logout=$("logoutBtn");if(logout&&!logout.dataset.authBound){logout.dataset.authBound="1";logout.addEventListener("click",()=>signOut(auth))}onAuthStateChanged(auth,setSignedIn)}
+if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init,{once:true});else init();
