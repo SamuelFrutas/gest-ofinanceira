@@ -25,6 +25,11 @@ jobs:
         uses: actions/checkout@v4
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
+      - name: Corrigir JavaScript e atualizar cache
+        run: |
+          sed -i 's#$("titheValue")?.textContent=money(personal\*state.settings.tithePercent/100);#if($("titheValue"))$("titheValue").textContent=money(personal*state.settings.tithePercent/100);#' app.js
+          sed -i "s#src=\"app.js\"#src=\"app.js?v=${GITHUB_SHA}\"#" index.html
+          sed -i "s#src=\"js/auth.js\"#src=\"js/auth.js?v=${GITHUB_SHA}\"#" index.html
       - name: Preparar site
         uses: actions/upload-pages-artifact@v3
         with:
