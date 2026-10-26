@@ -1,6 +1,17 @@
 document.addEventListener("DOMContentLoaded",()=>{
   const form=document.getElementById("expenseForm");
   const button=form?.querySelector(".save-btn");
+  const fixed=form?.elements.fixed;
+  const installment=form?.elements.installment;
+  function syncExclusive(changed){
+    if(!fixed||!installment)return;
+    if(changed===fixed&&fixed.checked){installment.checked=false;}
+    if(changed===installment&&installment.checked){fixed.checked=false;}
+    document.getElementById("fixedFields")?.classList.toggle("hidden",!fixed.checked);
+    document.getElementById("installmentFields")?.classList.toggle("hidden",!installment.checked);
+  }
+  fixed?.addEventListener("change",()=>syncExclusive(fixed));
+  installment?.addEventListener("change",()=>syncExclusive(installment));
   if(form&&button){
     button.type="button";
     button.addEventListener("click",()=>{
