@@ -12,4 +12,11 @@ s=s.replace('const saveLocal=()=>{localStorage.setItem("gf_expenses",JSON.string
 s=re.sub(r'function save\(\)\{saveLocal\(\);if\(!state\.user\)return Promise\.resolve\(\);.*?return Promise\.resolve\(\)\}\nasync function saveCloud.*?\nfunction migrateData', 'function save(){saveLocal();return Promise.resolve()}\nfunction migrateData', s, flags=re.S)
 s=re.sub(r'function showAuthError\(e\)\{.*?\}\nasync function logout\(\)\{await signOut\(auth\)\}', 'function showAuthError(e){console.error(e)}\nfunction logout(){sessionStorage.removeItem("gf_unlocked");location.reload()}', s)
 s=re.sub(r'\nonAuthStateChanged\(auth,async user=>\{.*?\}\);\s*$', '\nif(sessionStorage.getItem("gf_unlocked")==="1"){state.user={uid:"local"};setAppVisible(true);renderDashboard()}else setAppVisible(false);\n', s, flags=re.S)
+# Dia de vencimento: permitir 1-31 e, nos meses menores, usar o ultimo dia do mes.
+s=s.replace('const day=Math.min(28,Number(f.fixedDay)||dateKey(f.dueDate||f.date).getDate());for(let i=0;i<60;i++){const d=addMonths(base,i+(i===0&&base.getDate()>day?1:0));d.setDate(day);','const day=Math.min(31,Math.max(1,Number(f.fixedDay)||dateKey(f.dueDate||f.date).getDate()));for(let i=0;i<60;i++){const d=addMonths(base,i+(i===0&&base.getDate()>day?1:0));d.setDate(Math.min(day,new Date(d.getFullYear(),d.getMonth()+1,0).getDate()));')
 p.write_text(s)
+
+ip=Path('index.html')
+html=ip.read_text()
+html=html.replace('name="fixedDay" type="number" min="1" max="28"','name="fixedDay" type="number" min="1" max="31"')
+ip.write_text(html)
