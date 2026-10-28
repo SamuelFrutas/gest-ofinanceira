@@ -29,10 +29,6 @@ jobs:
           node --check js/auth.js
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
-      - name: Atualizar cache dos módulos
-        run: |
-          sed -i "s#src=\"app.js\"#src=\"app.js?v=${GITHUB_SHA}\"#" index.html
-          sed -i "s#src=\"js/auth.js\"#src=\"js/auth.js?v=${GITHUB_SHA}\"#" index.html
       - name: Preparar site
         uses: actions/upload-pages-artifact@v3
         with:
