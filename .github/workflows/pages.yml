@@ -23,14 +23,17 @@ jobs:
     steps:
       - name: Baixar código
         uses: actions/checkout@v4
+      - name: Usar o mesmo Firebase do Agendamentos
+        run: |
+          sed -i 's#AIzaSyA2-FFv1_kdi8Q_NfHi9uQMWfb6LYge1zKQ#AIzaSyBLU3UNXuPGUFrpmV6syI80ynUHppupeNA#g; s#gestaofinanceira-ee882.firebaseapp.com#samuel-frutas.firebaseapp.com#g; s#gestaofinanceira-ee882.firebasestorage.app#samuel-frutas.firebasestorage.app#g; s#gestaofinanceira-ee882#samuel-frutas#g; s#334105279920#475005081261#g; s#1:334105279920:web:97628313aabced377eea75#1:475005081261:web:314ac91f8b0578b995824#g' app.js js/auth.js
       - name: Validar JavaScript
         run: |
           node --check app.js
           for f in js/*.js; do node --check "$f"; done
       - name: Renovar cache dos scripts
         run: |
-          sed -i "s#src=\"app.js\"#src=\"app.js?v=${GITHUB_SHA}\"#" index.html
-          sed -i "s#src=\"js/auth.js\"#src=\"js/auth.js?v=${GITHUB_SHA}\"#" index.html
+          sed -E -i "s#src=\"app.js[^\"]*\"#src=\"app.js?v=${GITHUB_SHA}\"#" index.html
+          sed -E -i "s#src=\"js/auth.js[^\"]*\"#src=\"js/auth.js?v=${GITHUB_SHA}\"#" index.html
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
       - name: Preparar site
