@@ -1,19 +1,15 @@
 name: Publicar Gestão Financeira no GitHub Pages
-
 on:
   push:
     branches: [main]
   workflow_dispatch:
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 concurrency:
   group: pages
   cancel-in-progress: true
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -21,20 +17,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Baixar código
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       - name: Validar JavaScript
-        run: |
-          node --check app.js
-          for f in js/*.js; do node --check "$f"; done
-      - name: Renovar cache dos scripts
-        run: |
-          sed -E -i "s#src=\"app.js[^\"]*\"#src=\"app.js?v=${GITHUB_SHA}\"#" index.html
-          sed -E -i "s#src=\"js/auth.js[^\"]*\"#src=\"js/auth.js?v=${GITHUB_SHA}\"#" index.html
-      - name: Configurar GitHub Pages
-        uses: actions/configure-pages@v5
-      - name: Preparar site
-        uses: actions/upload-pages-artifact@v3
+        run: node --check app.js && node --check js/auth.js
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: .
       - name: Publicar
