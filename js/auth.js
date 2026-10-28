@@ -1,5 +1,6 @@
 import { getApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
+import "./financial-core-fix.js";
 
 const auth=getAuth(getApp());
 const $=id=>document.getElementById(id);
