@@ -23,14 +23,38 @@ jobs:
     steps:
       - name: Baixar código
         uses: actions/checkout@v4
+
+      - name: Validar configuração atual do Firebase
+        run: |
+          curl --fail --silent --show-error --location \
+            "https://gestaofinanceira-ee882.firebaseapp.com/__/firebase/init.json" \
+            -o /tmp/firebase-init.json
+          node -e 'const fs=require("fs"); const c=JSON.parse(fs.readFileSync("/tmp/firebase-init.json","utf8")); if(!c.apiKey||!c.projectId||c.projectId!=="gestaofinanceira-ee882") process.exit(1); console.log("Firebase OK:",c.projectId);'
+
+      - name: Aplicar configuração atual do Firebase no app
+        run: |
+          node <<'NODE'
+          const fs=require('fs');
+          const cfg=JSON.parse(fs.readFileSync('/tmp/firebase-init.json','utf8'));
+          const keys=['apiKey','authDomain','projectId','storageBucket','messagingSenderId','appId'];
+          for (const k of keys) if (!cfg[k]) throw new Error(`Firebase config sem ${k}`);
+          let s=fs.readFileSync('app.js','utf8');
+          const config=`const firebaseConfig=${JSON.stringify({apiKey:cfg.apiKey,authDomain:cfg.authDomain,projectId:cfg.projectId,storageBucket:cfg.storageBucket,messagingSenderId:cfg.messagingSenderId,appId:cfg.appId})};`;
+          s=s.replace(/const firebaseConfig=\{[^;]+\};/,config);
+          if(!s.includes(config)) throw new Error('Não foi possível aplicar a configuração do Firebase');
+          fs.writeFileSync('app.js',s);
+          NODE
+
       - name: Validar JavaScript
         run: |
           node --check app.js
           for f in js/*.js; do node --check "$f"; done
+
       - name: Renovar cache dos scripts
         run: |
           sed -E -i "s#src=\"app.js[^\"]*\"#src=\"app.js?v=${GITHUB_SHA}\"#" index.html
           sed -E -i "s#src=\"js/auth.js[^\"]*\"#src=\"js/auth.js?v=${GITHUB_SHA}\"#" index.html
+
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
       - name: Preparar site
