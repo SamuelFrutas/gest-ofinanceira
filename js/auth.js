@@ -1,15 +1,14 @@
-import { getApp, getApps, initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+import { getApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
 import "./financial-core-fix.js";
 import "./final-stabilization.js";
 
-const firebaseConfig={apiKey:"AIzaSyA2-FFv1_kdi8Q_NfHi9uQMWfb6LYge1zKQ",authDomain:"gestaofinanceira-ee882.firebaseapp.com",projectId:"gestaofinanceira-ee882",storageBucket:"gestaofinanceira-ee882.firebasestorage.app",messagingSenderId:"334105279920",appId:"1:334105279920:web:97628313aabced377eea75"};
-const app=getApps().length?getApp():initializeApp(firebaseConfig);
-const auth=getAuth(app);
+// Usa exatamente a mesma instância Firebase criada pelo app.js.
+const auth=getAuth(getApp());
 const $=id=>document.getElementById(id);
 function hideApplication(){document.body.classList.add("signed-out");document.querySelectorAll("body > header,body > nav,body > main,body > .fab,body > .modal").forEach(e=>e.classList.add("app-hidden"));$("loginScreen")?.classList.remove("hidden")}
 function showApplication(){document.body.classList.remove("signed-out");document.querySelectorAll("body > header,body > nav,body > main,body > .fab,body > .modal").forEach(e=>e.classList.remove("app-hidden"));$("loginScreen")?.classList.add("hidden")}
-function loginMessage(code){return {"auth/invalid-credential":"E-mail ou senha incorretos.","auth/invalid-email":"Informe um e-mail válido.","auth/too-many-requests":"Muitas tentativas. Aguarde alguns minutos.","auth/user-disabled":"Esta conta está desativada.","auth/network-request-failed":"Falha de conexão. Verifique a internet.","auth/operation-not-allowed":"Login por e-mail/senha não está habilitado no Firebase.","auth/unauthorized-domain":"Este domínio não está autorizado no Firebase.","auth/user-not-found":"Usuário não encontrado.","auth/wrong-password":"Senha incorreta."}[code]||`Não foi possível entrar (${code||"erro desconhecido"}).`}
+function loginMessage(code){return {"auth/invalid-credential":"E-mail ou senha incorretos.","auth/invalid-email":"Informe um e-mail válido.","auth/too-many-requests":"Muitas tentativas. Aguarde alguns minutos.","auth/user-disabled":"Esta conta está desativada.","auth/network-request-failed":"Falha de conexão. Verifique a internet.","auth/operation-not-allowed":"Login por e-mail/senha não está habilitado no Firebase.","auth/unauthorized-domain":"Este domínio ainda não está autorizado no Firebase.","auth/user-not-found":"Usuário não encontrado.","auth/wrong-password":"Senha incorreta."}[code]||`Não foi possível entrar (${code||"erro desconhecido"}).`}
 async function loginEmail(event){event?.preventDefault();const email=$("loginEmail").value.trim(),password=$("loginPassword").value,button=$("loginButton"),error=$("loginError");if(!email||!password){error.textContent="Informe seu e-mail e sua senha.";return}try{button.disabled=true;error.style.color="";error.textContent="Entrando...";await signInWithEmailAndPassword(auth,email,password)}catch(err){console.error("LOGIN_FIREBASE",err);error.textContent=loginMessage(err.code);button.disabled=false}}
 async function resetPassword(){const email=$("loginEmail").value.trim(),error=$("loginError");if(!email){error.textContent="Informe seu e-mail para receber o link de redefinição.";$("loginEmail").focus();return}try{await sendPasswordResetEmail(auth,email);error.style.color="#15803d";error.textContent="Se esse e-mail estiver cadastrado, enviaremos as instruções."}catch(err){console.error(err);error.style.color="#b91c1c";error.textContent=loginMessage(err.code)}}
 $("loginForm").addEventListener("submit",loginEmail);$("resetPassword").addEventListener("click",resetPassword);hideApplication();
