@@ -1,28 +1,8 @@
-name: Migrar Gestão Financeira para login local
-
+name: Legado desativado
 on:
-  push:
-    branches: [main]
-
-permissions:
-  contents: write
-
+  workflow_dispatch:
 jobs:
-  migrate:
-    if: ${{ !contains(github.event.head_commit.message, 'Migrar Gestão Financeira para login local') }}
+  disabled:
     runs-on: ubuntu-latest
     steps:
-      - name: Baixar código
-        uses: actions/checkout@v4
-      - name: Aplicar migração
-        run: python3 scripts/migrate-local-auth.py
-      - name: Validar JavaScript
-        run: node --check app.js && for f in js/*.js; do node --check "$f"; done
-      - name: Salvar alteração
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app.js index.html
-          git diff --cached --quiet && exit 0
-          git commit -m "Migrar Gestão Financeira para login local"
-          git push
+      - run: echo "Migração antiga desativada. O sistema novo não usa este workflow."
