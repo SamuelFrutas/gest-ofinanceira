@@ -1,10 +1,8 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+import { getApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
 
-const firebaseConfig={apiKey:"AIzaSyA2-FFv1_kdi8Q_NfHi9uQMWfb6LYge1zKQ",authDomain:"gestaofinanceira-ee882.firebaseapp.com",projectId:"gestaofinanceira-ee882",storageBucket:"gestaofinanceira-ee882.firebasestorage.app",messagingSenderId:"334105279920",appId:"1:334105279920:web:97628313aabced377eea75"};
-const auth=getAuth(initializeApp(firebaseConfig));
+const auth=getAuth(getApp());
 const $=id=>document.getElementById(id);
-let applicationLoaded=false;
 
 function hideApplication(){
   document.body.classList.add("signed-out");
@@ -13,20 +11,9 @@ function hideApplication(){
 }
 
 function showApplication(){
+  document.body.classList.remove("signed-out");
+  document.querySelectorAll("body > header,body > nav,body > main,body > .fab,body > .modal").forEach(e=>e.classList.remove("app-hidden"));
   $("loginScreen")?.classList.add("hidden");
-}
-
-async function loadApplication(){
-  if(applicationLoaded)return;
-  applicationLoaded=true;
-  try{
-    await import(`../app.js?auth=${Date.now()}`);
-  }catch(err){
-    applicationLoaded=false;
-    console.error("Erro ao carregar o aplicativo:",err);
-    hideApplication();
-    $("loginError").textContent="O sistema encontrou um erro ao carregar. Atualize a página e tente novamente.";
-  }
 }
 
 async function loginEmail(event){
@@ -75,11 +62,9 @@ hideApplication();
 
 onAuthStateChanged(auth,user=>{
   if(!user){
-    applicationLoaded=false;
     hideApplication();
     if($("loginButton"))$("loginButton").disabled=false;
     return;
   }
   showApplication();
-  loadApplication();
 });
