@@ -292,3 +292,35 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 :root[data-theme="dark"] .dashboard-invoice-total.is-paid{background:#1e432d;color:#b6dfc2}
 :root[data-theme="dark"] .dashboard-invoice-total.is-partial{background:#49391e;color:#f1d08a}
 :root[data-theme="dark"] .dashboard-invoice-total.is-open{background:#512b2b;color:#ffaaa5}
+
+/* Resumo semanal: leitura rápida e posição de destaque no dashboard */
+.weekly-summary-panel{margin-top:18px;margin-bottom:22px}
+.weekly-section-icon{background:#e1f4e7;color:#19834a}
+.weekly-section-icon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.weekly-summary-content{display:grid;gap:16px}
+.weekly-period{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:10px;padding:8px;background:var(--surface-soft,#f5f7f6);border:1px solid var(--border);border-radius:16px}
+.weekly-period>span{display:flex;align-items:center;justify-content:center;gap:10px;min-width:0;text-align:center}
+.weekly-period>span b{font-size:clamp(13px,3.5vw,17px);font-weight:650}
+.weekly-period svg{width:20px;height:20px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.weekly-nav-btn{width:42px;height:42px;border:1px solid var(--border);border-radius:12px;background:var(--surface);font-size:27px;line-height:1;cursor:pointer}
+.weekly-nav-btn:disabled{opacity:.35;cursor:default}
+.weekly-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.weekly-metric{min-width:0;padding:14px 12px;border:1px solid transparent;border-radius:16px;display:grid;gap:10px}
+.weekly-metric span{display:flex;align-items:center;gap:6px;font-size:clamp(11px,3vw,14px);line-height:1.25}
+.weekly-metric strong{font-size:clamp(14px,3.8vw,20px);line-height:1.2;overflow-wrap:anywhere}
+.weekly-metric.paid{background:#e8f7ec;border-color:#c6e8d0;color:#18733c}
+.weekly-metric.open{background:#fff0ef;border-color:#f3d0ce;color:#b83232}
+.weekly-metric.total{background:#eaf1ff;border-color:#d2def6;color:#244d91}
+.weekly-progress{padding:16px;border:1px solid var(--border);border-radius:16px;background:var(--surface)}
+.weekly-progress-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.weekly-progress-head b{font-size:15px}
+.weekly-progress-head strong{color:#18733c;font-size:14px;white-space:nowrap}
+.weekly-progress-track{height:12px;border-radius:99px;background:var(--border);overflow:hidden}
+.weekly-progress-track span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#18a34a,#36c76b);transition:width .25s ease}
+.weekly-progress small{display:block;margin-top:10px;color:var(--muted)}
+:root[data-theme="dark"] .weekly-section-icon{background:#1e432d;color:#9bdbb0}
+:root[data-theme="dark"] .weekly-metric.paid{background:#1e432d;border-color:#326847;color:#b6dfc2}
+:root[data-theme="dark"] .weekly-metric.open{background:#512b2b;border-color:#774040;color:#ffaaa5}
+:root[data-theme="dark"] .weekly-metric.total{background:#233b5c;border-color:#35547c;color:#b9d0ff}
+:root[data-theme="dark"] .weekly-progress-head strong{color:#9bdbb0}
+@media(max-width:420px){.weekly-metrics{gap:7px}.weekly-metric{padding:11px 8px}.weekly-metric strong{font-size:13px}.weekly-metric span{font-size:11px}.weekly-progress{padding:13px}}
