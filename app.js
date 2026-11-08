@@ -133,7 +133,7 @@ function report(){
   startDate=iso(base);endDate=iso(last);previousStart=iso(new Date(base.getFullYear(),base.getMonth()-1,1,12));previousEnd=iso(new Date(base.getFullYear(),base.getMonth(),0,12));
  }
  const expenses=all().filter(e=>e.date&&e.date>=startDate&&e.date<=endDate),filtered=expenses.filter(e=>typeFilter==='all'||e.type===typeFilter);
- const total=filtered.reduce((s,e)=>s+(+e.amount||0),0),paid=filtered.reduce((s,e)=>s+Math.max(0,(+e.amount||0)-remaining(e)),0),pending=filtered.reduce((s,e)=>s+remaining(e),0),overdue=filtered.filter(e=>remaining(e)>0.005&&(e.dueDate||e.date)<today).reduce((s,e)=>s+remaining(e),0);
+ const total=filtered.reduce((s,e)=>s+(+e.amount||0),0),paid=filtered.reduce((s,e)=>s+paidDuring(e,startDate,endDate),0),pending=filtered.reduce((s,e)=>s+remaining(e),0),overdue=filtered.filter(e=>remaining(e)>0.005&&(e.dueDate||e.date)<today).reduce((s,e)=>s+remaining(e),0);
  const personal=filtered.filter(e=>e.type==='Pessoal').reduce((s,e)=>s+(+e.amount||0),0),company=filtered.filter(e=>e.type==='Empresa').reduce((s,e)=>s+(+e.amount||0),0);
  const previous=all().filter(e=>e.date&&e.date>=previousStart&&e.date<=previousEnd&&(typeFilter==='all'||e.type===typeFilter)).reduce((s,e)=>s+(+e.amount||0),0),delta=total-previous,deltaPct=previous>0?delta/previous*100:null;
  $('reportTotal').textContent=money(total);$('reportPersonal').textContent=money(personal);$('reportCompany').textContent=money(company);$('reportPaid').textContent=money(paid);$('reportPending').textContent=money(pending);$('reportOverdue').textContent=money(overdue);
