@@ -11,3 +11,5 @@
 .month-picker{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px 14px;margin:0 0 14px}.month-picker strong{text-transform:capitalize}.compact-month{margin:0;padding:0;border:0;background:transparent;gap:8px}.compact-month .month-btn{width:34px;height:34px}.card-month-caption{display:block;color:#718078;font-size:12px;margin:4px 0 7px}
 
 @media(max-width:520px){.expense-row{display:block}.expense-right{min-width:0;text-align:left;margin-top:10px}.row-actions{justify-content:flex-start}}
+
+.ui-icon{width:18px;height:18px;display:inline-block;flex:0 0 18px;vertical-align:middle;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.nav-item{display:flex;align-items:center;gap:12px}.nav-item .ui-icon{color:#16803d}.shortcut-icon .ui-icon{width:21px;height:21px;flex-basis:21px}
