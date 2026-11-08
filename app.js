@@ -67,9 +67,11 @@ function row(e){const paid=Math.min(+e.amount||0,(e.paidAmount!==undefined&&e.pa
 function remaining(e){const paid=e.paidAmount!==undefined&&e.paidAmount!==null?(+e.paidAmount||0):(e.status==='pago'?(+e.amount||0):0);return Math.max(0,(+e.amount||0)-paid)}
 function paidDuring(e,start,end){const payments=Array.isArray(e.partialPayments)?e.partialPayments:[];if(payments.length){const total=payments.reduce((sum,p)=>{const date=String(p.date||'');return date>=start&&date<=end?sum+(+p.amount||0):sum},0);return Math.min(+e.amount||0,total)}const paid=e.paidAmount!==undefined&&e.paidAmount!==null?(+e.paidAmount||0):(e.status==='pago'?(+e.amount||0):0);const date=e.paidDate||(e.status==='pago'?e.date:null);return date&&date>=start&&date<=end?Math.min(+e.amount||0,paid):0}
 function dash(){
- const l=month(),t=l.reduce((a,e)=>a+e.amount,0),p=l.filter(e=>e.type==='Pessoal').reduce((a,e)=>a+e.amount,0);
+ const l=month(),t=l.reduce((a,e)=>a+e.amount,0),p=l.filter(e=>e.type==='Pessoal').reduce((a,e)=>a+e.amount,0),company=l.filter(e=>e.type==='Empresa').reduce((a,e)=>a+e.amount,0);
+ const [selectedYear,selectedMonth]=st.month.split('-').map(Number),paidStart=st.month+'-01',paidEnd=iso(new Date(selectedYear,selectedMonth,0,12));
+ const paidTotal=all().reduce((sum,e)=>sum+paidDuring(e,paidStart,paidEnd),0);
  $('monthLabel').textContent=d(st.month).toLocaleDateString('pt-BR',{month:'long',year:'numeric'}).replace(/^./,x=>x.toUpperCase());
- $('totalExpenses').textContent=money(t);$('personalExpenses').textContent=money(p);$('companyExpenses').textContent=money(t-p);
+ $('totalExpenses').textContent=money(t);$('paidExpenses').textContent=money(paidTotal);$('personalExpenses').textContent=money(p);$('companyExpenses').textContent=money(company);
  $('pendingExpenses').textContent=money(l.reduce((a,e)=>a+remaining(e),0));
  const todayAlert=iso(new Date()),limitAlert=iso(add(todayAlert,3));
  const overdue=all().filter(e=>remaining(e)>0.005&&String(e.dueDate||e.date)<todayAlert).sort((a,b)=>(a.dueDate||a.date).localeCompare(b.dueDate||b.date));
