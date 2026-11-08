@@ -36,3 +36,5 @@
 
 /* Sinalização visual por vencimento na lista de despesas */
 .expense-card.overdue-expense{background:#fff7f7;border-color:#efcaca}.expense-card.overdue-expense:before{background:#d94a4a}.expense-card.due-today-expense{background:#fffdf3;border-color:#f0dfaa}.expense-card.due-today-expense:before{background:#d6a126}.invoice-view-btn{padding:6px 9px;font-size:11px;white-space:nowrap}
+
+.install-app-item{margin-top:6px;border:1px solid #d9eadf;background:#f3faf5;color:#176b3b}.install-app-item .ui-icon{color:#16803d}.install-app-item.installed-app{opacity:.75}
