@@ -192,7 +192,8 @@ window.gf3Refresh=render;
 cloudStatus('Conectando...');
 onAuthStateChanged(auth,async user=>{
  const generation=++authLoadGeneration,revisionAtLoad=localRevision;
- cloudReady=false;cloudUser=user||null;syncPending=false;syncFailed=false;
+ if(cloudUser&&cloudUser.uid!==(user?.uid||null))syncPending=false;
+ cloudReady=false;cloudUser=user||null;syncFailed=false;
  if(retryTimer){clearTimeout(retryTimer);retryTimer=null}
  if(!user){cloudStatus('Aguardando login');return}
  cloudStatus('Carregando seus dados...');
@@ -200,7 +201,7 @@ onAuthStateChanged(auth,async user=>{
   const ref=doc(db,'users',user.uid,'data','main');
   const snapshot=await getDoc(ref);
   if(generation!==authLoadGeneration||cloudUser?.uid!==user.uid)return;
-  const changedDuringLoad=localRevision!==revisionAtLoad;
+  const changedDuringLoad=localRevision!==revisionAtLoad||syncPending;
   if(snapshot.exists()&&!changedDuringLoad){
    const remote=snapshot.data();
    st=Object.assign({expenses:[],cards:[],categories:C.slice(),settings:{tithe:10},month:new Date().toISOString().slice(0,10),expensesMonth:new Date().toISOString().slice(0,7),cardsMonth:new Date().toISOString().slice(0,7)},remote);
