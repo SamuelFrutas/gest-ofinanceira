@@ -61,6 +61,22 @@ const applyBancoPanOct2026Invoice=()=>{
  st.bancoPanOct2026InvoiceVersion=1;
  return true;
 };
+const applyBancoPanDebtAgreement=()=>{
+ if((+st.bancoPanDebtAgreementVersion||0)>=1)return false;
+ const card=st.cards.find(c=>/pan/i.test(String(c.bank||'')+' '+String(c.name||'')));
+ if(!card)return false;
+ const category='Renegociação de dívidas',subcategory='Acordos';
+ if(!st.categories.includes(category))st.categories.push(category);
+ st.subcategories=st.subcategories||{};
+ st.subcategories[category]=Array.isArray(st.subcategories[category])?st.subcategories[category]:[];
+ if(!st.subcategories[category].includes(subcategory))st.subcategories[category].push(subcategory);
+ st.categoryTypes=st.categoryTypes||{};
+ st.categoryTypes[category]='Pessoal';
+ const date='2026-10-24';
+ st.expenses.push({id:uid(),description:'Acordo de dívida',amount:375.10,date,dueDate:cardDue(date,card),category,subcategory,type:'Pessoal',payment:'Cartão de crédito',cardId:card.id,note:'',status:'pendente',paidDate:null,paidAmount:0});
+ st.bancoPanDebtAgreementVersion=1;
+ return true;
+};
 const applyCardDueDateCorrection=()=>{
  if((+st.cardDueDateCorrectionVersion||0)>=2)return false;
  st.cards.forEach(card=>st.expenses.filter(e=>e.cardId===card.id).forEach(e=>{e.dueDate=cardDue(e.date||e.dueDate,card)}));
@@ -367,7 +383,7 @@ onAuthStateChanged(auth,async user=>{
    syncPending=true;
   }
   if(generation!==authLoadGeneration||cloudUser?.uid!==user.uid)return;
-  if(applyCategoryCatalog()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyExpenseCleanup()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyCompanyCarInstallments()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyNovember2026Bills()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyRecurringNov2026Bills()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyBancoBrasilNov2026Invoice()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyBancoPanOct2026Invoice()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyCardInstallmentContinuation()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyCardDueDateCorrection()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}
+  if(applyCategoryCatalog()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyExpenseCleanup()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyCompanyCarInstallments()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyNovember2026Bills()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyRecurringNov2026Bills()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyBancoBrasilNov2026Invoice()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyBancoPanOct2026Invoice()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyBancoPanDebtAgreement()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyCardInstallmentContinuation()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyCardDueDateCorrection()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}
   cloudReady=true;
   if(changedDuringLoad||syncPending){syncPending=true;queueCloudSync()}
   else cloudStatus('Dados sincronizados');
