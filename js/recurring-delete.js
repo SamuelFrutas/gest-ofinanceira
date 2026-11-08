@@ -1,10 +1,13 @@
 (()=> {
   const KEY='gf3_data';
-  let activeModal=null;
+  let activeModal=null,activeKeyHandler=null,returnFocus=null;
   function closeModal(){
+    if(activeKeyHandler){document.removeEventListener('keydown',activeKeyHandler);activeKeyHandler=null;}
     if(!activeModal)return;
     activeModal.remove();
     activeModal=null;
+    if(returnFocus?.isConnected)returnFocus.focus();
+    returnFocus=null;
   }
   function showChoiceModal(onChoose){
     closeModal();
@@ -37,10 +40,9 @@
       const choice=event.target.closest('[data-recurring-choice]')?.dataset.recurringChoice;
       if(choice){close();onChoose(choice);}
     });
-    const onKeyDown=event=>{
-      if(event.key==='Escape'){close();document.removeEventListener('keydown',onKeyDown);}
-    };
-    document.addEventListener('keydown',onKeyDown);
+    returnFocus=document.activeElement;
+    activeKeyHandler=event=>{if(event.key==='Escape')close();};
+    document.addEventListener('keydown',activeKeyHandler);
     modal.querySelector('[data-recurring-choice="one"]').focus();
   }
   document.addEventListener('click',event=>{
