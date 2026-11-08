@@ -70,3 +70,16 @@
 .invoice-expense-row .status,
 .expense-info .status{font-size:13px!important;font-weight:800!important;line-height:1.25!important;padding:5px 10px!important;min-height:0!important;letter-spacing:0!important}
 .invoice-expense-row .expense-info>.status{width:max-content!important;max-width:max-content!important;flex:0 0 auto!important;align-self:flex-start!important}
+
+/* Aviso diário de contas e faturas com vencimento hoje */
+.due-notice-card{width:min(480px,100%);padding:22px}
+.due-notice-card .modal-head{margin-bottom:8px}
+.due-notice-card .modal-head h2{margin:5px 0 0;font-size:20px;line-height:1.25}
+.due-notice-card>p{margin:0 0 16px;font-size:13px}
+.due-notice-list{display:grid;gap:9px;max-height:42vh;overflow:auto}
+.due-notice-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:12px 13px;border:1px solid #e7ece8;border-radius:12px;background:#fbfdfb;font-size:14px}
+.due-notice-row span{min-width:0;overflow-wrap:anywhere}
+.due-notice-row strong{white-space:nowrap}
+.due-notice-total{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:16px 0;padding-top:14px;border-top:1px solid #e5eae6;font-size:14px;font-weight:750}
+.due-notice-total strong{font-size:18px}
+.due-notice-confirm{width:100%;min-height:46px}
