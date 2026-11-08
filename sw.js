@@ -1,4 +1,4 @@
-const CACHE_NAME='gestao-financeira-shell-v9';
+const CACHE_NAME='gestao-financeira-shell-v10';
 const APP_SHELL=['./','./index.html','./style.css','./style-overrides.css','./expense-form.css','./auth.css','./manifest.webmanifest','./icons/app-icon.svg'];
 self.addEventListener('install',event=>{event.waitUntil(caches.open(CACHE_NAME).then(cache=>cache.addAll(APP_SHELL)).then(()=>self.skipWaiting()));});
 self.addEventListener('activate',event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key!==CACHE_NAME).map(key=>caches.delete(key)))).then(()=>self.clients.claim()));});
