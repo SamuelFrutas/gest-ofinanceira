@@ -59,7 +59,11 @@ onAuthStateChanged(auth,async user=>{
   const snapshot=await getDoc(ref);
   if(snapshot.exists()){
    const remote=snapshot.data();
-   st=Object.assign({expenses:[],cards:[],categories:C.slice(),settings:{tithe:10},month:new Date().toISOString().slice(0,10)},remote);
+   st=Object.assign({expenses:[],cards:[],categories:C.slice(),settings:{tithe:10},month:new Date().toISOString().slice(0,10),expensesMonth:new Date().toISOString().slice(0,7),cardsMonth:new Date().toISOString().slice(0,7)},remote);
+   const validMonth=v=>typeof v==='string'&&/^\d{4}-\d{2}$/.test(v)&&Number(v.slice(5,7))>=1&&Number(v.slice(5,7))<=12;
+   const fallbackMonth=new Date().toISOString().slice(0,7);
+   if(!validMonth(st.expensesMonth))st.expensesMonth=fallbackMonth;
+   if(!validMonth(st.cardsMonth))st.cardsMonth=fallbackMonth;
    st.categories=[...new Set(st.categories||C)];
    localStorage.setItem(K,JSON.stringify(st));
   }else{
