@@ -95,7 +95,7 @@ $('categoryDetailPrev').onclick=()=>{categoryView.month=iso(add(categoryView.mon
 let drawerReturnFocus=null;
 function openDrawer(){drawerReturnFocus=document.activeElement;$('drawer').classList.remove('hidden');$('menuBtn').setAttribute('aria-expanded','true');$('drawer').querySelector('.nav-item')?.focus()}
 function closeDrawer(){const wasOpen=!$('drawer').classList.contains('hidden');$('drawer').classList.add('hidden');$('menuBtn').setAttribute('aria-expanded','false');if(wasOpen&&drawerReturnFocus?.focus)drawerReturnFocus.focus()}
-$('menuBtn').onclick=openDrawer;$('closeDrawer').onclick=closeDrawer;
+$('menuBtn').onclick=openDrawer;$('closeDrawer').onclick=closeDrawer;$('mobileNavMore')?.addEventListener('click',openDrawer);
 $('drawer').addEventListener('click',e=>{if(e.target===$('drawer'))closeDrawer()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('drawer').classList.contains('hidden')){e.preventDefault();closeDrawer();return}if(e.key==='Tab'&&!$('drawer').classList.contains('hidden')){const focusable=[...$('drawer').querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])')];if(!focusable.length)return;const first=focusable[0],last=focusable[focusable.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
 ['uiTheme','uiHighContrast','uiEasyTouch'].forEach(id=>$(id).addEventListener('change',()=>{uiPrefs={theme:$('uiTheme').value,highContrast:$('uiHighContrast').checked,easyTouch:$('uiEasyTouch').checked};saveUiPrefs()}));
