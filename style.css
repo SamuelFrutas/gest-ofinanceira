@@ -70,3 +70,57 @@
 .invoice-expense-row .status,
 .expense-info .status{font-size:13px!important;font-weight:800!important;line-height:1.25!important;padding:5px 10px!important;min-height:0!important;letter-spacing:0!important}
 .invoice-expense-row .expense-info>.status{width:max-content!important;max-width:max-content!important;flex:0 0 auto!important;align-self:flex-start!important}
+
+/* Aviso diário de contas e faturas com vencimento hoje */
+.due-notice-card{width:min(480px,100%);padding:22px}
+.due-notice-card .modal-head{margin-bottom:8px}
+.due-notice-card .modal-head h2{margin:5px 0 0;font-size:20px;line-height:1.25}
+.due-notice-card>p{margin:0 0 16px;font-size:13px}
+.due-notice-list{display:grid;gap:9px;max-height:42vh;overflow:auto}
+.due-notice-row{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:12px 13px;border:1px solid #e7ece8;border-radius:12px;background:#fbfdfb;font-size:14px}
+.due-notice-row span{min-width:0;overflow-wrap:anywhere}
+.due-notice-row strong{white-space:nowrap}
+.due-notice-total{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:16px 0;padding-top:14px;border-top:1px solid #e5eae6;font-size:14px;font-weight:750}
+.due-notice-total strong{font-size:18px}
+.due-notice-confirm{width:100%;min-height:46px}
+
+/* Preferências visuais: tema, contraste e alvos de toque (sem alterar tipografia) */
+:root{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+:root[data-theme="dark"] body,:root[data-theme="dark"] .login-screen{background:#111815;color:#edf5ef}
+:root[data-theme="dark"] .topbar,:root[data-theme="dark"] .drawer-panel,:root[data-theme="dark"] .login-card,:root[data-theme="dark"] .month-card,:root[data-theme="dark"] .summary,:root[data-theme="dark"] .panel,:root[data-theme="dark"] .tithe-card,:root[data-theme="dark"] .modal-card,:root[data-theme="dark"] .bank-card{background:#1b2620;color:#edf5ef;border-color:#35463b}
+:root[data-theme="dark"] .nav-item,:root[data-theme="dark"] .month-btn,:root[data-theme="dark"] .secondary-btn,:root[data-theme="dark"] .palette-swatch{background:#29382f;color:#edf5ef;border-color:#46594b}
+:root[data-theme="dark"] input,:root[data-theme="dark"] select,:root[data-theme="dark"] textarea{background:#17211b;color:#f2f7f3;border-color:#526457}
+:root[data-theme="dark"] input::placeholder{color:#a9b9ad}
+:root[data-theme="dark"] .muted,:root[data-theme="dark"] .page-title p,:root[data-theme="dark"] .summary span,:root[data-theme="dark"] .summary small,:root[data-theme="dark"] .expense-info small,:root[data-theme="dark"] .user-box small{color:#b8c8bd}
+:root[data-theme="dark"] .category-line,:root[data-theme="dark"] .expense-row,:root[data-theme="dark"] .user-box,:root[data-theme="dark"] .due-notice-total{border-color:#35463b}
+:root[data-theme="dark"] .due-notice-row{background:#202e25;border-color:#405246;color:#edf5ef}
+:root[data-theme="dark"] .icon-btn{color:#edf5ef}
+:root[data-theme="dark"] .mini-btn{background:#26352c;color:#edf5ef;border-color:#526457}
+:root[data-theme="dark"] .summary.primary{background:#176b3c;border-color:#25834f}
+:root[data-theme="dark"] .drawer{background:#0009}
+:root[data-theme="dark"] .status.pending{background:#553a1d;color:#ffd49a}
+:root[data-theme="dark"] .status.paid{background:#194b32;color:#a9efc3}
+:root[data-theme="dark"] .overdue-expense{background:#3b2020}
+:root[data-theme="dark"] .due-today-expense{background:#42391d}
+:root[data-theme="dark"] .login-error{color:#ff9b9b}
+:root[data-theme="dark"] .eyebrow{color:#65d995}
+:root[data-theme="dark"] .primary-btn,:root[data-theme="dark"] .save-btn{background:#16834a;color:#fff}
+body[data-high-contrast="true"]{--ui-border:#77877c}
+body[data-high-contrast="true"] .panel,body[data-high-contrast="true"] .summary,body[data-high-contrast="true"] input,body[data-high-contrast="true"] select,body[data-high-contrast="true"] button{border-width:2px}
+body[data-high-contrast="true"] .muted,body[data-high-contrast="true"] .page-title p,body[data-high-contrast="true"] .summary span,body[data-high-contrast="true"] .summary small{color:#33443a}
+:root[data-theme="dark"] body[data-high-contrast="true"] .muted,:root[data-theme="dark"] body[data-high-contrast="true"] .page-title p,:root[data-theme="dark"] body[data-high-contrast="true"] .summary span,:root[data-theme="dark"] body[data-high-contrast="true"] .summary small{color:#f0f5f1}
+body[data-easy-touch="true"] button,body[data-easy-touch="true"] .nav-item,body[data-easy-touch="true"] .month-btn,body[data-easy-touch="true"] .mini-btn{min-height:46px}
+body[data-easy-touch="true"] .nav-item{padding:16px}
+body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
+.ui-preference-toggle{display:flex;align-items:center;gap:10px;margin:14px 0;cursor:pointer}
+.ui-preference-toggle input{width:20px;height:20px;flex:0 0 20px;accent-color:#16834a}
+:focus-visible{outline:3px solid #16834a!important;outline-offset:3px}
+:root[data-theme="dark"] :focus-visible{outline-color:#79e6a8!important}
+@media(max-width:700px){
+ .drawer-panel{width:min(360px,92vw);padding:20px;gap:10px}
+ .drawer-head{min-height:48px}
+ .nav-item{min-height:48px;padding:15px}
+ .topbar{padding-left:14px;padding-right:14px}
+ .container{padding:14px}
+}
