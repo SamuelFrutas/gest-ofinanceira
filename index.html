@@ -98,7 +98,7 @@
 window.addEventListener('error',event=>{const status=document.getElementById('cloudStatus');if(status&&event.filename&&/app\\.js|firebase|firestore/.test(event.filename)){status.textContent='Erro ao iniciar: '+(event.message||'falha ao carregar JavaScript');}});
 window.addEventListener('unhandledrejection',event=>{const status=document.getElementById('cloudStatus');if(status)status.textContent='Erro ao iniciar: '+(event.reason?.message||String(event.reason||'falha inesperada'));});
 </script><script src="js/recurring-delete.js?v=5"></script><script type="module">
-import('./app.js?v=66');</script><script type="module" src="js/auth.js?v=5"></script><script>
+import('./app.js?v=67');</script><script type="module" src="js/auth.js?v=5"></script><script>
 let deferredInstallPrompt=null;
 const installButton=document.getElementById('installAppButton');
 window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;});
