@@ -198,16 +198,15 @@ function dash(){
  $('monthLabel').textContent=d(st.month).toLocaleDateString('pt-BR',{month:'long',year:'numeric'}).replace(/^./,x=>x.toUpperCase());
  $('totalExpenses').textContent=money(t);$('paidExpenses').textContent=money(paidTotal);$('personalExpenses').textContent=money(p);$('companyExpenses').textContent=money(company);
  $('pendingExpenses').textContent=money(l.reduce((a,e)=>a+remaining(e),0));
- const todayAlert=iso(new Date()),limitAlert=iso(add(todayAlert,3));
+ const todayAlert=iso(new Date()),limitAlert=iso(add(todayAlert,2));
  const alertEntries=[],cardAlertGroups={};
  all().forEach(e=>{
   const due=String(e.dueDate||e.date||'').slice(0,10),open=remaining(e);
   if(!due||open<=0.005)return;
   if(e.cardId){
-   const key=e.cardId+'|'+mk(due);
+   const key=e.cardId+'|'+due;
    cardAlertGroups[key]??={due,cardId:e.cardId,amount:0};
    cardAlertGroups[key].amount+=open;
-   if(due<cardAlertGroups[key].due)cardAlertGroups[key].due=due;
   }else alertEntries.push({due,amount:open});
  });
  Object.values(cardAlertGroups).forEach(x=>alertEntries.push(x));
