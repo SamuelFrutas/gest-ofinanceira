@@ -72,6 +72,11 @@
   </div>
   <div id="installmentFields" class="expense-conditional-panel hidden">
    <div class="conditional-panel-title">Detalhes do parcelamento</div>
+   <div id="installmentValueModeField" class="installment-value-mode">
+    <span class="installment-mode-label">Como deseja informar o valor?</span>
+    <label class="expense-option"><input type="radio" name="installmentValueMode" value="total" checked><span><b>Dividir o valor total</b><small>O valor informado será dividido pela quantidade de parcelas.</small></span></label>
+    <label class="expense-option"><input type="radio" name="installmentValueMode" value="each"><span><b>Usar o valor como parcela</b><small>O valor informado será cobrado em cada parcela.</small></span></label>
+   </div>
    <div class="conditional-fields-grid">
     <label>Parcela atual<input name="installmentStart" type="number" min="1" value="1" inputmode="numeric"></label>
     <label>Total de parcelas<input name="installments" type="number" min="2" value="2" inputmode="numeric"></label>
