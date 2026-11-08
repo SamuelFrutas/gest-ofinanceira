@@ -10,7 +10,6 @@
 </div>
 <section class="dashboard-alerts" aria-label="Alertas de vencimento">
  <div class="dashboard-alert-item overdue-alert"><span class="alert-icon"><svg class="ui-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><b>Despesas atrasadas</b><small><strong id="alertOverdueCount">0</strong> conta(s) · <span id="alertOverdueValue">R$ 0,00</span></small></div></div>
- <div class="dashboard-alert-item soon-alert"><span class="alert-icon"><svg class="ui-icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M12 14v3"/></svg></span><div><b>Vencem nos próximos 3 dias</b><small><strong id="alertSoonCount">0</strong> conta(s) · <span id="alertSoonValue">R$ 0,00</span></small></div></div>
 </section>
 <section class="panel dashboard-panel weekly-summary-panel"><div class="panel-head"><div><h3>Resumo semanal</h3><p>De segunda a domingo.</p></div><span class="section-symbol weekly-section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></span></div><div id="weeklySummary" class="weekly-summary-content"></div></section>
 <div class="dashboard-section-title"><div><h3>Acompanhamento</h3><p>Atalhos para as áreas principais.</p></div></div>
@@ -98,7 +97,7 @@
 window.addEventListener('error',event=>{const status=document.getElementById('cloudStatus');if(status&&event.filename&&/app\\.js|firebase|firestore/.test(event.filename)){status.textContent='Erro ao iniciar: '+(event.message||'falha ao carregar JavaScript');}});
 window.addEventListener('unhandledrejection',event=>{const status=document.getElementById('cloudStatus');if(status)status.textContent='Erro ao iniciar: '+(event.reason?.message||String(event.reason||'falha inesperada'));});
 </script><script src="js/recurring-delete.js?v=5"></script><script type="module">
-import('./app.js?v=90');</script><script type="module" src="js/auth.js?v=5"></script><script>
+import('./app.js?v=91');</script><script type="module" src="js/auth.js?v=5"></script><script>
 let deferredInstallPrompt=null;
 const installButton=document.getElementById('installAppButton');
 window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();deferredInstallPrompt=event;});
