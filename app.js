@@ -192,7 +192,7 @@ window.gf3Refresh=render;
 cloudStatus('Conectando...');
 onAuthStateChanged(auth,async user=>{
  const generation=++authLoadGeneration,revisionAtLoad=localRevision;
- cloudReady=false;cloudUser=user||null;syncFailed=false;
+ cloudReady=false;cloudUser=user||null;syncPending=false;syncFailed=false;
  if(retryTimer){clearTimeout(retryTimer);retryTimer=null}
  if(!user){cloudStatus('Aguardando login');return}
  cloudStatus('Carregando seus dados...');
