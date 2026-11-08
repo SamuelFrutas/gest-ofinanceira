@@ -489,3 +489,6 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 :root[data-theme="dark"] .report-kpi{background:var(--surface);border-color:var(--line)}:root[data-theme="dark"] .report-rank{background:#173b28;color:#9de2b5}
 @media(max-width:700px){.report-kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.report-charts{grid-template-columns:1fr}.report-filter-panel{grid-template-columns:1fr 1fr}.report-monthly-chart{height:170px;gap:4px}.report-month-column b{font-size:9px}}
 @media(max-width:380px){.report-filter-panel{grid-template-columns:1fr}.report-filter-item select{font-size:13px}.report-kpi{padding:11px}.report-kpi strong{font-size:16px}}
+
+/* Abas de categorias pessoais e empresariais */
+.category-type-tabs{display:flex;gap:8px;margin:0 0 16px;padding:4px;border:1px solid #e4ebe6;border-radius:13px;background:#f7faf8}.category-type-tab{flex:1;min-width:0;padding:11px 14px;border:1px solid transparent;border-radius:10px;background:transparent;color:#64746a;font-weight:750;font-size:13px;cursor:pointer}.category-type-tab.active{background:#fff;border-color:#dce8df;color:#176b3b;box-shadow:0 2px 7px #173b240a}@media(max-width:480px){.category-type-tabs{gap:5px}.category-type-tab{padding:10px 7px;font-size:12px}}
