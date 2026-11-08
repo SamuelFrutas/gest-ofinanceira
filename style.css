@@ -21,3 +21,5 @@
 
 /* Cores suaves para identificar cada cartão */
 .bank-card{border-top:4px solid var(--card-accent);background:linear-gradient(145deg,var(--card-bg),#fff 72%)}.bank-card.theme-sage{--card-accent:#238653;--card-bg:#f1f8f3}.bank-card.theme-ocean{--card-accent:#2876a8;--card-bg:#eff6fb}.bank-card.theme-plum{--card-accent:#8060a6;--card-bg:#f6f2fa}.bank-card.theme-sand{--card-accent:#b17a32;--card-bg:#fbf6ed}.bank-card.theme-graphite{--card-accent:#53616a;--card-bg:#f1f4f5}.bank-card .bank-card-chip{background:color-mix(in srgb,var(--card-accent) 12%,white);color:var(--card-accent)}.bank-card .bank-card-progress span{background:var(--card-accent)}.card-filter-row{display:flex;align-items:center;gap:12px;margin:0 0 12px;max-width:330px}.card-filter-row label{font-size:13px;font-weight:700;white-space:nowrap}.card-filter-row select{padding:10px 12px}@media(max-width:520px){.card-filter-row{max-width:none;align-items:flex-start;flex-direction:column}.card-filter-row select{width:100%}}
+
+.card-state{font-size:12px;text-transform:capitalize}.card-state.paga{color:#168044}.card-state.aberta{color:#a66b12}.card-state.atrasada{color:#c43b3b}
