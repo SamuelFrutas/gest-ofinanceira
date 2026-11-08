@@ -205,7 +205,7 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 .type-summary-row{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
 .type-summary-row+ .type-summary-row{padding-top:12px;border-top:1px solid #edf1ee}
 .type-summary-row span{font-size:13px;font-weight:650;color:#718078}
-.type-summary-row strong{font-size:clamp(17px,3.8vw,22px);white-space:nowrap;color:#26372d}
+.type-summary-row strong{font-size:clamp(16px,3.4vw,19px);white-space:nowrap;color:#26372d}
 :root[data-theme="dark"] .dashboard-summary .total-card{background:linear-gradient(145deg,#554719,#403714);border-color:#806c2b}
 :root[data-theme="dark"] .dashboard-summary .total-card span,:root[data-theme="dark"] .dashboard-summary .total-card small{color:#f4df9b}
 :root[data-theme="dark"] .dashboard-summary .total-card strong{color:#ffe08a}
