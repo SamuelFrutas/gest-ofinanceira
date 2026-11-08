@@ -498,3 +498,8 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 .expense-name-tag{display:inline-flex;align-items:center;max-width:100%;width:fit-content;padding:5px 9px;border-radius:8px;background:color-mix(in srgb,var(--expense-category-color) 13%,var(--surface,#fff));border:1px solid color-mix(in srgb,var(--expense-category-color) 30%,transparent);color:var(--text,#26372d);line-height:1.35;overflow-wrap:anywhere;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 .expense-card .expense-name-tag{font-size:13px;font-weight:800}
 :root[data-theme="dark"] .expense-name-tag{background:color-mix(in srgb,var(--expense-category-color) 22%,var(--surface,#17221b));border-color:color-mix(in srgb,var(--expense-category-color) 42%,transparent);color:var(--text,#edf5ef)}
+
+/* Corrige a regra mais específica da lista de despesas */
+.expense-card .expense-name.expense-name-tag{display:inline-flex!important;align-items:center;width:fit-content;max-width:100%;min-height:28px;padding:5px 9px;border-radius:8px;background:var(--expense-name-bg,#eaf3ed)!important;border:1px solid var(--expense-name-border,#cbded0)!important;color:var(--text,#26372d)!important;white-space:normal;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.expense-card .expense-name.expense-name-tag[style*="--expense-category-color"]{--expense-name-bg:color-mix(in srgb,var(--expense-category-color) 16%,#fff);--expense-name-border:color-mix(in srgb,var(--expense-category-color) 42%,#fff)}
+:root[data-theme="dark"] .expense-card .expense-name.expense-name-tag{color:#edf5ef!important;background:color-mix(in srgb,var(--expense-category-color) 24%,#17221b)!important;border-color:color-mix(in srgb,var(--expense-category-color) 48%,#17221b)!important}
