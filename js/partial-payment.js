@@ -74,7 +74,7 @@
         e.paidAmount=+e.amount||0;
         e.status='pago';
       }
-      save(s);location.reload();
+      save(s);Promise.resolve(window.gf3PersistLocal?.()).finally(()=>location.reload());
     }
   },true);
   observer=new MutationObserver(()=>decorate());
