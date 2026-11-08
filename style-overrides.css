@@ -494,12 +494,7 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 .category-type-tabs{display:flex;gap:8px;margin:0 0 16px;padding:4px;border:1px solid #e4ebe6;border-radius:13px;background:#f7faf8}.category-type-tab{flex:1;min-width:0;padding:11px 14px;border:1px solid transparent;border-radius:10px;background:transparent;color:#64746a;font-weight:750;font-size:13px;cursor:pointer}.category-type-tab.active{background:#fff;border-color:#dce8df;color:#176b3b;box-shadow:0 2px 7px #173b240a}@media(max-width:480px){.category-type-tabs{gap:5px}.category-type-tab{padding:10px 7px;font-size:12px}}
 
 
-/* Descrição destacada pela cor da categoria; situação mantém sua própria cor */
-.expense-name-tag{display:inline-flex;align-items:center;max-width:100%;width:fit-content;padding:5px 9px;border-radius:8px;background:color-mix(in srgb,var(--expense-category-color) 13%,var(--surface,#fff));border:1px solid color-mix(in srgb,var(--expense-category-color) 30%,transparent);color:var(--text,#26372d);line-height:1.35;overflow-wrap:anywhere;box-decoration-break:clone;-webkit-box-decoration-break:clone}
-.expense-card .expense-name-tag{font-size:13px;font-weight:800}
-:root[data-theme="dark"] .expense-name-tag{background:color-mix(in srgb,var(--expense-category-color) 22%,var(--surface,#17221b));border-color:color-mix(in srgb,var(--expense-category-color) 42%,transparent);color:var(--text,#edf5ef)}
 
-/* Corrige a regra mais específica da lista de despesas */
-.expense-card .expense-name.expense-name-tag{display:inline-flex!important;align-items:center;width:fit-content;max-width:100%;min-height:28px;padding:5px 9px;border-radius:8px;background:var(--expense-name-bg,#eaf3ed)!important;border:1px solid var(--expense-name-border,#cbded0)!important;color:var(--text,#26372d)!important;white-space:normal;box-decoration-break:clone;-webkit-box-decoration-break:clone}
-.expense-card .expense-name.expense-name-tag[style*="--expense-category-color"]{--expense-name-bg:color-mix(in srgb,var(--expense-category-color) 16%,#fff);--expense-name-border:color-mix(in srgb,var(--expense-category-color) 42%,#fff)}
-:root[data-theme="dark"] .expense-card .expense-name.expense-name-tag{color:#edf5ef!important;background:color-mix(in srgb,var(--expense-category-color) 24%,#17221b)!important;border-color:color-mix(in srgb,var(--expense-category-color) 48%,#17221b)!important}
+/* Etiqueta de preenchimento no texto da descrição da despesa */
+.expense-card b.expense-name.expense-name-tag{display:inline-block!important;width:fit-content!important;max-width:100%;padding:5px 10px!important;margin:0 0 5px!important;border-radius:8px!important;background:#e8f3eb!important;border:1px solid #c4dfcb!important;color:#203b29!important;font-size:14px!important;font-weight:800!important;line-height:1.35!important;white-space:normal!important;overflow-wrap:anywhere!important}
+:root[data-theme="dark"] .expense-card b.expense-name.expense-name-tag{background:#203b2b!important;border-color:#3e7650!important;color:#e8f5eb!important}
