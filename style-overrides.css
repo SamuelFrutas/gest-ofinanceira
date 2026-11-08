@@ -189,3 +189,34 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 :root[data-theme="dark"] .tithe-card strong{color:#8fe2ad}
 :root[data-theme="dark"] .tithe-card p{border-color:#405b48;color:#c1d3c6}
 @media(max-width:520px){.tithe-month-nav{padding:10px;gap:8px}.tithe-month-nav strong{font-size:15px}.tithe-card{min-height:170px;padding:20px;border-radius:17px}}
+
+
+/* Dashboard: resumo financeiro reorganizado */
+.dashboard-summary .total-card{background:linear-gradient(145deg,#fff4c7 0%,#ffedaa 100%);border-color:#efd477;color:#684d00}
+.dashboard-summary .total-card span,.dashboard-summary .total-card small{color:#806313}
+.dashboard-summary .total-card strong{color:#6b4c00}
+.dashboard-summary .paid-card{background:linear-gradient(145deg,#e5f8eb 0%,#d4f1df 100%);border-color:#a9ddba}
+.dashboard-summary .paid-card span,.dashboard-summary .paid-card small{color:#27633d}
+.dashboard-summary .paid-card strong{color:#168044}
+.dashboard-summary .pending-card{background:linear-gradient(145deg,#fff0ef 0%,#ffe1df 100%);border-color:#efb9b5}
+.dashboard-summary .pending-card span,.dashboard-summary .pending-card small{color:#9c3833}
+.dashboard-summary .pending-card strong{color:#c62828}
+.dashboard-summary .type-summary{display:grid;align-content:center;gap:14px;background:#fff;border-color:#e5eae6;color:#26372d}
+.type-summary-row{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+.type-summary-row+ .type-summary-row{padding-top:12px;border-top:1px solid #edf1ee}
+.type-summary-row span{font-size:13px;font-weight:650;color:#718078}
+.type-summary-row strong{font-size:clamp(17px,3.8vw,22px);white-space:nowrap;color:#26372d}
+:root[data-theme="dark"] .dashboard-summary .total-card{background:linear-gradient(145deg,#554719,#403714);border-color:#806c2b}
+:root[data-theme="dark"] .dashboard-summary .total-card span,:root[data-theme="dark"] .dashboard-summary .total-card small{color:#f4df9b}
+:root[data-theme="dark"] .dashboard-summary .total-card strong{color:#ffe08a}
+:root[data-theme="dark"] .dashboard-summary .paid-card{background:linear-gradient(145deg,#1d432d,#1b3828);border-color:#386b49}
+:root[data-theme="dark"] .dashboard-summary .paid-card span,:root[data-theme="dark"] .dashboard-summary .paid-card small{color:#b6dfc2}
+:root[data-theme="dark"] .dashboard-summary .paid-card strong{color:#8fe2ad}
+:root[data-theme="dark"] .dashboard-summary .pending-card{background:linear-gradient(145deg,#4a2828,#3b2222);border-color:#794343}
+:root[data-theme="dark"] .dashboard-summary .pending-card span,:root[data-theme="dark"] .dashboard-summary .pending-card small{color:#f0b8b5}
+:root[data-theme="dark"] .dashboard-summary .pending-card strong{color:#ffaaa5}
+:root[data-theme="dark"] .dashboard-summary .type-summary{background:#1b2620;border-color:#405246;color:#edf5ef}
+:root[data-theme="dark"] .type-summary-row span{color:#b8c8bd}
+:root[data-theme="dark"] .type-summary-row strong{color:#edf5ef}
+:root[data-theme="dark"] .type-summary-row+.type-summary-row{border-color:#35463b}
+@media(max-width:520px){.dashboard-summary .type-summary{gap:11px}.type-summary-row strong{font-size:17px}}
