@@ -193,7 +193,7 @@ function dueAlertEntries(){
  const bankEntries=[],cardInvoices=new Map();
  for(const e of all()){
   const due=String(e.dueDate||'').slice(0,10),open=remaining(e);
-  if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(due)||open<=0.005)continue;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(due)||open<=0.005)continue;
   if(!e.cardId){bankEntries.push({due,amount:open,kind:'expense'});continue}
   const key=String(e.cardId)+'|'+due.slice(0,7);
   let invoice=cardInvoices.get(key);
