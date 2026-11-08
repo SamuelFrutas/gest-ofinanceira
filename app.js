@@ -38,6 +38,29 @@ const $=id=>document.getElementById(id),K='gf3_data';const CATEGORY_CATALOG={Pes
  st.bancoBrasilNov2026InvoiceVersion=1;
  return true;
 };
+const applyBancoPanOct2026Invoice=()=>{
+ if((+st.bancoPanOct2026InvoiceVersion||0)>=1)return false;
+ const card=st.cards.find(c=>/pan/i.test(String(c.bank||'')+' '+String(c.name||'')));
+ if(!card)return false;
+ const rows=[
+  ['Gasolina',95,'2026-10-26','Empresa','Veículo da empresa','Combustível'],
+  ['Supermercado',55,'2026-10-24','Pessoal','Moradia','Supermercado'],
+  ['Supermercado — compras para Ayla',47.70,'2026-10-24','Pessoal','Moradia','Supermercado'],
+  ['Restaurante — refeição fora',25,'2026-10-23','Pessoal','Alimentação','Refeições fora'],
+  ['Sorveteria',19.15,'2026-10-23','Pessoal','Alimentação','Refeições fora'],
+  ['Churrasquinho do André',60,'2026-10-23','Pessoal','Alimentação','Refeições fora'],
+  ['Gasolina',91.19,'2026-10-23','Empresa','Veículo da empresa','Combustível'],
+  ['Alimentação',61,'2026-10-23','Empresa','Alimentação','Refeições fora'],
+  ['Gasolina',165.55,'2026-10-23','Empresa','Veículo da empresa','Combustível'],
+  ['Gasolina',150,'2026-10-22','Empresa','Veículo da empresa','Combustível'],
+  ['Gasolina — Uber da empresa',15.26,'2026-10-22','Empresa','Veículo da empresa','Combustível']
+ ];
+ rows.forEach(([description,amount,date,type,category,subcategory])=>{
+  st.expenses.push({id:uid(),description,amount,date,dueDate:cardDue(date,card),category,subcategory,type,payment:'Cartão de crédito',cardId:card.id,note:'',status:'pendente',paidDate:null,paidAmount:0});
+ });
+ st.bancoPanOct2026InvoiceVersion=1;
+ return true;
+};
 const applyCardDueDateCorrection=()=>{
  if((+st.cardDueDateCorrectionVersion||0)>=2)return false;
  st.cards.forEach(card=>st.expenses.filter(e=>e.cardId===card.id).forEach(e=>{e.dueDate=cardDue(e.date||e.dueDate,card)}));
@@ -344,7 +367,7 @@ onAuthStateChanged(auth,async user=>{
    syncPending=true;
   }
   if(generation!==authLoadGeneration||cloudUser?.uid!==user.uid)return;
-  if(applyCategoryCatalog()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyExpenseCleanup()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyCompanyCarInstallments()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyNovember2026Bills()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyRecurringNov2026Bills()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyBancoBrasilNov2026Invoice()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyCardInstallmentContinuation()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyCardDueDateCorrection()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}
+  if(applyCategoryCatalog()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyExpenseCleanup()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyCompanyCarInstallments()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyNovember2026Bills()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyRecurringNov2026Bills()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyBancoBrasilNov2026Invoice()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyBancoPanOct2026Invoice()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyCardInstallmentContinuation()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}if(applyCardDueDateCorrection()){localStorage.setItem(K,JSON.stringify(st));syncPending=true;}
   cloudReady=true;
   if(changedDuringLoad||syncPending){syncPending=true;queueCloudSync()}
   else cloudStatus('Dados sincronizados');
