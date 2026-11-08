@@ -65,7 +65,7 @@
         );
       }
       localStorage.setItem(KEY,JSON.stringify(state));
-      Promise.resolve(window.gf3PersistLocal?.()).finally(()=>location.reload());
+      Promise.resolve(window.gf3PersistLocal?.()).then(()=>{window.gf3Refresh?.();}).catch(error=>{console.error('Falha ao atualizar despesas recorrentes:',error);});
     });
   },true);
 })();
