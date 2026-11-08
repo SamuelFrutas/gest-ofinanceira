@@ -1,7 +1,46 @@
 import { auth, db } from './js/firebase.js?v=2';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
 import { doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
-const $=id=>document.getElementById(id),K='gf3_data';const C=['Alimentação','Casa','Transporte','Saúde','Educação','Lazer','Trabalho','Outros'];const uid=()=>crypto.randomUUID(),money=n=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(+n||0),pm=v=>{v=String(v||'').replace(/R\$|\s/g,'');return +(v.includes(',')?v.replace(/\./g,'').replace(',','.'):v.replace(/[^0-9.-]/g,''))||0},esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let st;try{st=JSON.parse(localStorage.getItem(K)||'null')}catch{}st=Object.assign({expenses:[],cards:[],categories:C.slice(),settings:{tithe:10},month:new Date().toISOString().slice(0,10),expensesMonth:new Date().toISOString().slice(0,7),cardsMonth:new Date().toISOString().slice(0,7)},st||{});st.categories=[...new Set(st.categories||C)];const CATEGORY_PALETTE=[{"key":"sage","name":"Verde","hex":"#238653"},{"key":"ocean","name":"Azul","hex":"#2876a8"},{"key":"plum","name":"Roxo","hex":"#8060a6"},{"key":"sand","name":"Areia","hex":"#b17a32"},{"key":"graphite","name":"Grafite","hex":"#53616a"},{"key":"rose","name":"Rosa","hex":"#c65375"},{"key":"orange","name":"Laranja","hex":"#d47732"},{"key":"gold","name":"Dourado","hex":"#b58b25"},{"key":"teal","name":"Turquesa","hex":"#268c91"},{"key":"wine","name":"Vinho","hex":"#963f60"},{"key":"olive","name":"Oliva","hex":"#72964a"},{"key":"steel","name":"Aço","hex":"#5275a8"},{"key":"yellow","name":"Amarelo","hex":"#f2c400"},{"key":"caramel","name":"Caramelo","hex":"#a58b6b"},{"key":"coral","name":"Coral","hex":"#d65f4a"},{"key":"red","name":"Vermelho","hex":"#d62828"}];st.categoryColors=st.categoryColors||{};const categoryColor=(name,index=0)=>(st.categoryColors&&typeof st.categoryColors==='object'?st.categoryColors[name]:null)||CATEGORY_PALETTE[(index>=0?index:0)%CATEGORY_PALETTE.length].hex;let cloudReady=false,cloudUser=null,cloudWrite=Promise.resolve();
+const $=id=>document.getElementById(id),K='gf3_data';const C=['Alimentação','Casa','Transporte','Saúde','Educação','Lazer','Trabalho','Outros'];const uid=()=>crypto.randomUUID(),money=n=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(+n||0),pm=v=>{v=String(v||'').replace(/R\$|\s/g,'');return +(v.includes(',')?v.replace(/\./g,'').replace(',','.'):v.replace(/[^0-9.-]/g,''))||0},esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let st;try{st=JSON.parse(localStorage.getItem(K)||'null')}catch{}st=Object.assign({expenses:[],cards:[],categories:C.slice(),settings:{tithe:10},month:new Date().toISOString().slice(0,10),expensesMonth:new Date().toISOString().slice(0,7),cardsMonth:new Date().toISOString().slice(0,7)},st||{});st.categories=[...new Set(st.categories||C)];const CATEGORY_PALETTE=[{"key":"sage","name":"Verde","hex":"#238653"},{"key":"ocean","name":"Azul","hex":"#2876a8"},{"key":"plum","name":"Roxo","hex":"#8060a6"},{"key":"sand","name":"Areia","hex":"#b17a32"},{"key":"graphite","name":"Grafite","hex":"#53616a"},{"key":"rose","name":"Rosa","hex":"#c65375"},{"key":"orange","name":"Laranja","hex":"#d47732"},{"key":"gold","name":"Dourado","hex":"#b58b25"},{"key":"teal","name":"Turquesa","hex":"#268c91"},{"key":"wine","name":"Vinho","hex":"#963f60"},{"key":"olive","name":"Oliva","hex":"#72964a"},{"key":"steel","name":"Aço","hex":"#5275a8"},{"key":"yellow","name":"Amarelo","hex":"#f2c400"},{"key":"caramel","name":"Caramelo","hex":"#a58b6b"},{"key":"coral","name":"Coral","hex":"#d65f4a"},{"key":"red","name":"Vermelho","hex":"#d62828"}];st.categoryColors=st.categoryColors||{};const categoryColor=(name,index=0)=>(st.categoryColors&&typeof st.categoryColors==='object'?st.categoryColors[name]:null)||CATEGORY_PALETTE[(index>=0?index:0)%CATEGORY_PALETTE.length].hex;let cloudReady=false,cloudUser=null,cloudWrite=Promise.resolve(),localRevision=0,syncPending=false,syncQueued=false,syncFailed=false,retryTimer=null,retryCount=0,authLoadGeneration=0;
+function scheduleCloudRetry(){
+ if(retryTimer||!cloudReady||!cloudUser)return;
+ if(!navigator.onLine){cloudStatus('Sem conexão · alterações salvas neste aparelho');return}
+ const delay=Math.min(60000,2000*Math.pow(2,Math.min(retryCount++,5)));
+ cloudStatus('Falha na nuvem · nova tentativa em instantes');
+ retryTimer=setTimeout(()=>{retryTimer=null;syncFailed=false;queueCloudSync()},delay);
+}
+function queueCloudSync(){
+ if(!cloudReady||!cloudUser||!syncPending||syncQueued)return cloudWrite;
+ syncQueued=true;
+ const targetUser=cloudUser;
+ cloudWrite=cloudWrite.catch(()=>{}).then(async()=>{
+  if(!cloudReady||cloudUser?.uid!==targetUser.uid)return;
+  const revision=localRevision;
+  const payload=JSON.parse(JSON.stringify(st));
+  await setDoc(doc(db,'users',targetUser.uid,'data','main'),{...payload,updatedAt:serverTimestamp()});
+  if(revision===localRevision){syncPending=false;retryCount=0;syncFailed=false;cloudStatus('Dados sincronizados')}
+  else syncPending=true;
+ }).catch(error=>{
+  syncPending=true;syncFailed=true;
+  console.error('Falha ao sincronizar:',error);
+  scheduleCloudRetry();
+ }).finally(()=>{
+  syncQueued=false;
+  if(syncPending&&!syncFailed&&cloudReady)queueCloudSync();
+ });
+ return cloudWrite;
+}
+window.addEventListener('online',()=>{
+ if(retryTimer){clearTimeout(retryTimer);retryTimer=null}
+ if(syncPending&&cloudReady){syncFailed=false;retryCount=0;queueCloudSync()}
+});
+window.addEventListener('offline',()=>{if(syncPending)cloudStatus('Sem conexão · alterações salvas neste aparelho')});
+document.addEventListener('visibilitychange',()=>{
+ if(document.visibilityState==='visible'&&syncPending&&cloudReady&&!syncQueued){
+  if(retryTimer){clearTimeout(retryTimer);retryTimer=null}
+  syncFailed=false;queueCloudSync();
+ }
+});
 const cloudStatus=message=>{const el=$('cloudStatus');if(el)el.textContent=message};
 const UI_PREF_KEY='gf3_ui_preferences';
 const readUiPrefs=()=>{try{return Object.assign({theme:'light',highContrast:false,easyTouch:false},JSON.parse(localStorage.getItem(UI_PREF_KEY)||'{}'))}catch{return {theme:'light',highContrast:false,easyTouch:false}}};
@@ -19,10 +58,9 @@ if(window.matchMedia){const colorScheme=window.matchMedia('(prefers-color-scheme
 
 const save=()=>{
  localStorage.setItem(K,JSON.stringify(st));
- if(cloudReady&&cloudUser){
-  const ref=doc(db,'users',cloudUser.uid,'data','main');
-  cloudWrite=cloudWrite.then(()=>setDoc(ref,{...st,updatedAt:serverTimestamp()})).then(()=>cloudStatus('Dados sincronizados')).catch(error=>{console.error('Falha ao sincronizar:',error);cloudStatus('Falha na sincronização')});
- }
+ localRevision++;
+ syncPending=true;
+ if(cloudReady&&cloudUser){syncFailed=false;queueCloudSync()}
 },d=s=>{let [y,m,x]=String(s).split('-').map(Number);return new Date(y,m-1,x,12)},iso=x=>`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`,days=(y,m)=>new Date(y,m,0).getDate(),add=(s,n,day)=>{let x=d(s),wanted=day??x.getDate(),z=new Date(x.getFullYear(),x.getMonth()+n,1,12);return new Date(z.getFullYear(),z.getMonth(),Math.min(wanted,days(z.getFullYear(),z.getMonth()+1)),12)},mk=x=>{x=typeof x==='string'?d(x):x;return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}`};const all=()=>st.expenses.filter(e=>!e.synthetic&&!e.adjustment),month=()=>all().filter(e=>mk(e.date)===mk(st.month));
 function page(id,fromPop=false){if(!fromPop&&document.querySelector('.page:not(.hidden)')?.id!==id){history.pushState({gfPage:id},'',location.pathname+location.search+location.hash)}document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$(id).classList.remove('hidden');document.querySelectorAll('#mobileBottomNav [data-page]').forEach(button=>{const active=button.dataset.page===id;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});closeDrawer();({dashboard:dash,expenses:list,cards:cards,reports:report,tithe:tithe,settings:settings,cardDetail:invoice,categoryDetail:categoryDetail,calendar:calendar}[id]||dash)()}history.replaceState({gfPage:document.querySelector('.page:not(.hidden)')?.id||'dashboard'},'',location.pathname+location.search+location.hash);window.addEventListener('popstate',event=>{const target=event.state?.gfPage;if(target&&$(target))page(target,true);else page('dashboard',true)});
 function row(e){const paid=Math.min(+e.amount||0,(e.paidAmount!==undefined&&e.paidAmount!==null?(+e.paidAmount||0):(e.status==='pago'?(+e.amount||0):0))),open=Math.max(0,(+e.amount||0)-paid),status=open<=0.005?'pago':paid>0?'parcial':'pendente';const due=e.dueDate||e.date,today=iso(new Date()),urgency=open>0.005&&due<today?"overdue-expense":open>0.005&&due===today?"due-today-expense":"";return `<article class="expense-row expense-card ${urgency}"><div class="expense-info"><b class="expense-name">${esc(e.description)}</b><small><i class="category-color-dot inline-category-dot" style="background:${categoryColor(e.category,st.categories.indexOf(e.category))}"></i>${esc(e.category)} · ${esc(e.type)} · ${e.payment==='Cartão de crédito'?'Cartão':'Conta bancária'}</small><small>Vencimento: ${d(e.dueDate||e.date).toLocaleDateString('pt-BR')}${e.installmentTotal?` · ${e.installmentNumber}/${e.installmentTotal}`:''}${e.fixed?' · Fixa':''}</small></div><div class="expense-right"><b>${money(e.amount)}</b><small class="payment-breakdown">Pago: ${money(paid)} · Em aberto: ${money(open)}</small><span class="status ${status==='pago'?'paid':status==='parcial'?'partial':'pending'}">${status==='pago'?'Pago':status==='parcial'?'Pagamento parcial':'Pendente'}</span><div class="row-actions"><button class="mini-btn" data-a="pay" data-id="${e.id}">${status==='pago'?'Reabrir':'Registrar pagamento'}</button><button class="mini-btn" data-a="edit" data-id="${e.id}">Editar</button><button class="mini-btn danger" data-a="del" data-id="${e.id}">Excluir</button></div></div></article>`}
@@ -153,13 +191,18 @@ window.gf3PersistLocal=()=>{try{const local=JSON.parse(localStorage.getItem(K)||
 window.gf3Refresh=render;
 cloudStatus('Conectando...');
 onAuthStateChanged(auth,async user=>{
- cloudReady=false;cloudUser=user||null;
+ const generation=++authLoadGeneration,revisionAtLoad=localRevision;
+ if(cloudUser&&cloudUser.uid!==(user?.uid||null))syncPending=false;
+ cloudReady=false;cloudUser=user||null;syncFailed=false;
+ if(retryTimer){clearTimeout(retryTimer);retryTimer=null}
  if(!user){cloudStatus('Aguardando login');return}
  cloudStatus('Carregando seus dados...');
  try{
   const ref=doc(db,'users',user.uid,'data','main');
   const snapshot=await getDoc(ref);
-  if(snapshot.exists()){
+  if(generation!==authLoadGeneration||cloudUser?.uid!==user.uid)return;
+  const changedDuringLoad=localRevision!==revisionAtLoad||syncPending;
+  if(snapshot.exists()&&!changedDuringLoad){
    const remote=snapshot.data();
    st=Object.assign({expenses:[],cards:[],categories:C.slice(),settings:{tithe:10},month:new Date().toISOString().slice(0,10),expensesMonth:new Date().toISOString().slice(0,7),cardsMonth:new Date().toISOString().slice(0,7)},remote);
    const validMonth=v=>typeof v==='string'&&/^\d{4}-\d{2}$/.test(v)&&Number(v.slice(5,7))>=1&&Number(v.slice(5,7))<=12;
@@ -169,12 +212,20 @@ onAuthStateChanged(auth,async user=>{
    st.categories=[...new Set(st.categories||C)];
    st.categoryColors=st.categoryColors&&typeof st.categoryColors==='object'?st.categoryColors:{};
    localStorage.setItem(K,JSON.stringify(st));
-  }else{
+  }else if(!snapshot.exists()&&!changedDuringLoad){
    await setDoc(ref,{...st,updatedAt:serverTimestamp()});
+   if(generation!==authLoadGeneration||cloudUser?.uid!==user.uid)return;
    localStorage.setItem(K,JSON.stringify(st));
+  }else{
+   syncPending=true;
   }
-  cloudReady=true;cloudStatus('Dados sincronizados');page('dashboard');checkDueTodayNotice();
+  if(generation!==authLoadGeneration||cloudUser?.uid!==user.uid)return;
+  cloudReady=true;
+  if(changedDuringLoad||syncPending){syncPending=true;queueCloudSync()}
+  else cloudStatus('Dados sincronizados');
+  page('dashboard');checkDueTodayNotice();
  }catch(error){
+  if(generation!==authLoadGeneration)return;
   console.error('Erro ao carregar dados do Firestore:',error);
   cloudReady=false;cloudStatus('Erro ao conectar à nuvem');
   alert('Não foi possível carregar seus dados na nuvem. Nenhuma informação local foi apagada. Verifique sua conexão e tente entrar novamente.');
