@@ -42,7 +42,7 @@
   </div>
  </section>
  <section class="expense-section">
-  <div class="expense-section-heading"><span class="expense-section-icon">▦</span><div><b>Classificação</b><small>Organize onde essa despesa se encaixa</small></div></div>
+  <div class="expense-section-heading"><span class="expense-section-icon">▦</span><div class="expense-section-heading-copy"><b>Classificação</b><small>Organize onde essa despesa se encaixa</small></div></div>
   <div class="expense-section-grid">
    <label class="expense-field">Categoria <span class="required-mark">*</span><select name="category" id="expenseCategory"></select></label>
    <label class="expense-field">Subcategoria<select name="subcategory" id="expenseSubcategory"><option value="">Sem subcategoria</option></select></label>
@@ -50,7 +50,7 @@
   </div>
  </section>
  <section class="expense-section">
-  <div class="expense-section-heading"><span class="expense-section-icon">▤</span><div><b>Pagamento</b><small>Como e quando essa despesa será paga</small></div></div>
+  <div class="expense-section-heading"><span class="expense-section-icon">▤</span><div class="expense-section-heading-copy"><b>Pagamento</b><small>Como e quando essa despesa será paga</small></div></div>
   <div class="expense-section-grid">
    <label class="expense-field">Forma de pagamento <span class="required-mark">*</span><select name="payment" id="expensePayment"><option>Conta bancária</option><option>Cartão de crédito</option></select></label>
    <label id="cardField" class="expense-field hidden">Cartão <span class="required-mark">*</span><select name="cardId" id="expenseCard"></select></label>
@@ -60,10 +60,10 @@
   </div>
  </section>
  <section class="expense-section expense-planning-section">
-  <div class="expense-section-heading"><span class="expense-section-icon">↻</span><div><b>Repetição e parcelamento</b><small>Ative se a despesa tiver parcelas ou se repetir</small></div></div>
+  <div class="expense-section-heading"><span class="expense-section-icon">↻</span><div class="expense-section-heading-copy"><b>Repetição e parcelamento</b><small>Ative se a despesa tiver parcelas ou se repetir</small></div></div>
   <div class="expense-options">
-   <label class="expense-option"><input name="installment" id="expenseInstallment" type="checkbox"><span><b>Compra parcelada</b><small>Dividir o valor em parcelas</small></span><i class="expense-option-check">✓</i></label>
-   <label class="expense-option"><input name="fixed" id="expenseFixed" type="checkbox"><span><b>Despesa fixa / recorrente</b><small>Repetir automaticamente</small></span><i class="expense-option-check">✓</i></label>
+   <label class="expense-option"><input name="installment" id="expenseInstallment" type="checkbox"><span><b>Compra parcelada</b><small>Dividir o valor em parcelas</small></span></label>
+   <label class="expense-option"><input name="fixed" id="expenseFixed" type="checkbox"><span><b>Despesa fixa / recorrente</b><small>Repetir automaticamente</small></span></label>
   </div>
   <div id="installmentFields" class="expense-conditional-panel hidden">
    <div class="conditional-panel-title">Detalhes do parcelamento</div>
@@ -92,7 +92,7 @@
 window.addEventListener('error',event=>{const status=document.getElementById('cloudStatus');if(status&&event.filename&&/app\\.js|firebase|firestore/.test(event.filename)){status.textContent='Erro ao iniciar: '+(event.message||'falha ao carregar JavaScript');}});
 window.addEventListener('unhandledrejection',event=>{const status=document.getElementById('cloudStatus');if(status)status.textContent='Erro ao iniciar: '+(event.reason?.message||String(event.reason||'falha inesperada'));});
 </script><script src="js/recurring-delete.js?v=5"></script><script type="module">
-import('./app.js?v=58').catch(error=>{
+import('./app.js?v=59').catch(error=>{
  const status=document.getElementById('cloudStatus');
  if(status) status.textContent='Falha ao iniciar: '+(error?.message||String(error));
  console.error('Falha ao importar app.js:',error);
