@@ -60,3 +60,19 @@
 #expenseModal .expense-section-icon svg{display:block;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 #expenseModal .expense-section-kicker{display:flex;align-items:center;gap:8px}
 #expenseModal .expense-kicker-icon{display:block;width:15px;height:15px;flex:0 0 15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* Correção visual: ícones do lançamento no verde padrão do sistema */
+#expenseModal .expense-section-icon{
+  color:#23834a!important;
+  background:#edf7ef!important;
+}
+#expenseModal .expense-section-icon svg{
+  color:#23834a!important;
+  stroke:#23834a!important;
+  fill:none!important;
+}
+#expenseModal .expense-kicker-icon{
+  color:#23834a!important;
+  stroke:#23834a!important;
+  fill:none!important;
+}
