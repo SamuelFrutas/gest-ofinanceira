@@ -107,7 +107,7 @@ function saveClose(){save();$('expenseModal').classList.add('hidden');st.editing
 function monthText(value){return d(value+'-01').toLocaleDateString('pt-BR',{month:'long',year:'numeric'}).replace(/^./,x=>x.toUpperCase())}function changeMonth(key,delta){const [y,m]=st[key].split('-').map(Number),z=new Date(y,m-1+delta,1,12);st[key]=`${z.getFullYear()}-${String(z.getMonth()+1).padStart(2,'0')}`;save();if(key==='expensesMonth')list();else{cards();if(!$('cardDetail').classList.contains('hidden')){st.activeInvoice=st.cardsMonth;invoice()}}}function list(){
  const q=$('expenseSearch').value.toLowerCase(),t=$('typeFilter').value,p=$('paymentFilter').value,s=$('statusFilter').value,c=$('categoryFilter').value,from=$('dateFromFilter').value,to=$('dateToFilter').value;
  const monthStart=st.expensesMonth+'-01';
- const base=all().filter(e=>!e.cardId&&(mk(e.dueDate||e.date)===st.expensesMonth||(String(e.dueDate||e.date)<monthStart&&remaining(e)>0.005)));
+ const currentMonth=mk(iso(new Date()));const base=all().filter(e=>{if(e.cardId)return false;const due=e.dueDate||e.date;return mk(due)===st.expensesMonth||(st.expensesMonth===currentMonth&&String(due)<monthStart&&remaining(e)>0.005)});
  const ordinary=base.filter(e=>(!q||String(e.description||'').toLowerCase().includes(q)||String(e.category||'').toLowerCase().includes(q)||String(e.subcategory||'').toLowerCase().includes(q))&&(!t||e.type===t)&&(!p||e.payment===p)&&(!s||e.status===s)&&(!c||e.category===c)&&(!from||String(e.date)>=from)&&(!to||String(e.date)<=to));
  const groups={};
  all().filter(e=>e.cardId&&mk(e.dueDate||e.date)===st.expensesMonth).forEach(e=>{(groups[e.cardId]??=[]).push(e)});
