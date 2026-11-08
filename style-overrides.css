@@ -284,3 +284,11 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 /* Alinhar nomes e status das faturas sempre à esquerda */
 .dashboard-invoice-heading{justify-items:start;text-align:left;align-items:start}
 .dashboard-invoice-heading>b,.dashboard-invoice-count{width:100%;text-align:left;justify-self:start}
+
+/* Valor da fatura acompanha a situação: paga, parcial ou pendente */
+.dashboard-invoice-total.is-paid{background:#dcf6e5;color:#18733c}
+.dashboard-invoice-total.is-partial{background:#fff0d6;color:#98620b}
+.dashboard-invoice-total.is-open{background:#ffe7e5;color:#b83232}
+:root[data-theme="dark"] .dashboard-invoice-total.is-paid{background:#1e432d;color:#b6dfc2}
+:root[data-theme="dark"] .dashboard-invoice-total.is-partial{background:#49391e;color:#f1d08a}
+:root[data-theme="dark"] .dashboard-invoice-total.is-open{background:#512b2b;color:#ffaaa5}
