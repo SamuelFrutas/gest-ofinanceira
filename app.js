@@ -79,7 +79,7 @@ const applyBancoPanDebtAgreement=()=>{
 };
 const applyPicPayOct2026Invoice=()=>{
  if((+st.picPayOct2026InvoiceVersion||0)>=1)return false;
- const card=st.cards.find(c=>/pic\\s*pay/i.test(String(c.bank||'')+' '+String(c.name||'')));
+ const card=st.cards.find(c=>/pic\s*pay/i.test(String(c.bank||'')+' '+String(c.name||'')));
  if(!card)return false;
  const rows=[
   ['Sistema',96.01,'Serviços','Sistemas','Empresa'],
