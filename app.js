@@ -201,7 +201,7 @@ function dash(){
  const todayAlert=iso(new Date()),limitAlert=iso(add(todayAlert,2));
  const alertEntries=[],cardAlertGroups={};
  all().forEach(e=>{
-  const due=String(e.dueDate||e.date||'').slice(0,10),open=remaining(e);
+  const due=String(e.dueDate||'').slice(0,10),open=remaining(e);
   if(!due||open<=0.005)return;
   if(e.cardId){
    const key=e.cardId+'|'+due;
