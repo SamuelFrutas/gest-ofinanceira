@@ -189,6 +189,20 @@ const save=()=>{
 function page(id,fromPop=false){if(!fromPop&&document.querySelector('.page:not(.hidden)')?.id!==id){history.pushState({gfPage:id},'',location.pathname+location.search+location.hash)}document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$(id).classList.remove('hidden');document.querySelectorAll('#mobileBottomNav [data-page]').forEach(button=>{const active=button.dataset.page===id;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});closeDrawer();({dashboard:dash,expenses:list,cards:cards,reports:report,tithe:tithe,settings:settings,cardDetail:invoice,categoryDetail:categoryDetail,calendar:calendar,categories:categories}[id]||dash)()}history.replaceState({gfPage:document.querySelector('.page:not(.hidden)')?.id||'dashboard'},'',location.pathname+location.search+location.hash);window.addEventListener('popstate',event=>{const target=event.state?.gfPage;if(target&&$(target))page(target,true);else page('dashboard',true)});
 function row(e){const paid=Math.min(+e.amount||0,(e.paidAmount!==undefined&&e.paidAmount!==null?(+e.paidAmount||0):(e.status==='pago'?(+e.amount||0):0))),open=Math.max(0,(+e.amount||0)-paid),status=open<=0.005?'pago':paid>0?'parcial':'pendente';const due=e.dueDate||e.date,today=iso(new Date()),urgency=open>0.005&&due<today?"overdue-expense":open>0.005&&due===today?"due-today-expense":"";return `<article class="expense-row expense-card ${urgency}"><div class="expense-info"><b class="expense-name expense-name-tag" style="--expense-category-color:${categoryColor(e.category,st.categories.indexOf(e.category))}">${esc(e.description)}</b><small><i class="category-color-dot inline-category-dot" style="background:${categoryColor(e.category,st.categories.indexOf(e.category))}"></i>${esc(e.category)}${e.subcategory?` / ${esc(e.subcategory)}`:''} · ${esc(e.type)} · ${e.payment==='Cartão de crédito'?'Cartão':'Conta bancária'}</small><small>Vencimento: ${d(e.dueDate||e.date).toLocaleDateString('pt-BR')}${e.installmentTotal?` · ${e.installmentNumber}/${e.installmentTotal}`:''}${e.fixed?' · Fixa':''}</small></div><div class="expense-right"><b>${money(e.amount)}</b><small class="payment-breakdown">Pago: ${money(paid)} · Em aberto: ${money(open)}</small><span class="status ${status==='pago'?'paid':status==='parcial'?'partial':'pending'}">${status==='pago'?'Pago':status==='parcial'?'Pagamento parcial':'Pendente'}</span><div class="row-actions"><button class="mini-btn" data-a="pay" data-id="${e.id}">${status==='pago'?'Reabrir':'Registrar pagamento'}</button><button class="mini-btn" data-a="edit" data-id="${e.id}">Editar</button><button class="mini-btn danger" data-a="del" data-id="${e.id}">Excluir</button></div></div></article>`}
 function remaining(e){const paid=e.paidAmount!==undefined&&e.paidAmount!==null?(+e.paidAmount||0):(e.status==='pago'?(+e.amount||0):0);return Math.max(0,(+e.amount||0)-paid)}
+function dueAlertEntries(){
+ const bankEntries=[],cardInvoices=new Map();
+ for(const e of all()){
+  const due=String(e.dueDate||'').slice(0,10),open=remaining(e);
+  if(!/^\\d{4}-\\d{2}-\\d{2}$/.test(due)||open<=0.005)continue;
+  if(!e.cardId){bankEntries.push({due,amount:open,kind:'expense'});continue}
+  const key=String(e.cardId)+'|'+due.slice(0,7);
+  let invoice=cardInvoices.get(key);
+  if(!invoice){invoice={due,amount:0,kind:'invoice',cardId:e.cardId};cardInvoices.set(key,invoice)}
+  if(due<invoice.due)invoice.due=due;
+  invoice.amount+=open;
+ }
+ return bankEntries.concat([...cardInvoices.values()]);
+}
 function paidDuring(e,start,end){const payments=Array.isArray(e.partialPayments)?e.partialPayments:[];if(payments.length){const total=payments.reduce((sum,p)=>{const date=String(p.date||'').slice(0,10);return date>=start&&date<=end?sum+(+p.amount||0):sum},0);return Math.min(+e.amount||0,total)}const paid=e.paidAmount!==undefined&&e.paidAmount!==null?(+e.paidAmount||0):(e.status==='pago'?(+e.amount||0):0);const date=String(e.paidDate||(e.status==='pago'?e.date:'')||'').slice(0,10);return date&&date>=start&&date<=end?Math.min(+e.amount||0,paid):0}
 function paidTotalForPeriod(start,end,type='all'){return all().reduce((sum,e)=>sum+((type==='all'||e.type===type)?paidDuring(e,start,end):0),0)}
 function dash(){
@@ -199,17 +213,7 @@ function dash(){
  $('totalExpenses').textContent=money(t);$('paidExpenses').textContent=money(paidTotal);$('personalExpenses').textContent=money(p);$('companyExpenses').textContent=money(company);
  $('pendingExpenses').textContent=money(l.reduce((a,e)=>a+remaining(e),0));
  const todayAlert=iso(new Date()),limitAlert=iso(add(todayAlert,2));
- const alertEntries=[],cardAlertGroups={};
- all().forEach(e=>{
-  const due=String(e.dueDate||'').slice(0,10),open=remaining(e);
-  if(!due||open<=0.005)return;
-  if(e.cardId){
-   const key=e.cardId+'|'+due;
-   cardAlertGroups[key]??={due,cardId:e.cardId,amount:0};
-   cardAlertGroups[key].amount+=open;
-  }else alertEntries.push({due,amount:open});
- });
- Object.values(cardAlertGroups).forEach(x=>alertEntries.push(x));
+ const alertEntries=dueAlertEntries();
  const overdue=alertEntries.filter(e=>e.due<todayAlert).sort((a,b)=>a.due.localeCompare(b.due));
  const soon=alertEntries.filter(e=>e.due>=todayAlert&&e.due<=limitAlert).sort((a,b)=>a.due.localeCompare(b.due));
  $('alertOverdueCount').textContent=String(overdue.length);$('alertOverdueValue').textContent=money(overdue.reduce((a,e)=>a+e.amount,0));
