@@ -204,3 +204,15 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
  :root[data-theme="dark"] .mobile-bottom-nav button:active,:root[data-theme="dark"] .mobile-bottom-nav button:focus-visible{background:#294633;color:#b8f0cb}
  body[data-easy-touch="true"] .mobile-bottom-nav button{min-height:58px}
 }
+
+/* Alerta de vencimento: destaque âmbar também no tema claro */
+.due-notice-card{background:#fff8e6;border:2px solid #e0a11a;box-shadow:0 22px 65px #5b430b30}
+.due-notice-card .eyebrow{color:#a96b00}
+.due-notice-card .modal-head h2{color:#6e4700}
+.due-notice-card>p{color:#775c28}
+.due-notice-row{background:#fffdf7;border:1px solid #e8c66e;color:#493712}
+.due-notice-total{border-color:#e4c36c;color:#5b430b}
+.due-notice-total strong{color:#8a5700}
+.due-notice-confirm{background:#c88712;color:#fff;border:1px solid #a96b00}
+.due-notice-confirm:hover{background:#a96b00}
+@media(max-width:700px){.due-notice-card{width:min(480px,calc(100vw - 24px));padding:19px}}
