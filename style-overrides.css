@@ -280,3 +280,7 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 :root[data-theme="dark"] .section-symbol-card{background:#233b5c;color:#9dc7ff}
 :root[data-theme="dark"] .section-symbol-calendar{background:#1e432d;color:#9bdbb0}
 :root[data-theme="dark"] .dashboard-invoice-brand{background:color-mix(in srgb,var(--invoice-card-accent) 25%,#202d26);color:color-mix(in srgb,var(--invoice-card-accent) 65%,white)}
+
+/* Alinhar nomes e status das faturas sempre à esquerda */
+.dashboard-invoice-heading{justify-items:start;text-align:left;align-items:start}
+.dashboard-invoice-heading>b,.dashboard-invoice-count{width:100%;text-align:left;justify-self:start}
