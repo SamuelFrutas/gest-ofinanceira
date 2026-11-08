@@ -224,3 +224,49 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 /* Ajuste de tamanho e encaixe dos valores Empresa/Pessoal */
 .dashboard-summary .type-summary .type-summary-row strong{font-size:17px;letter-spacing:-.35px;min-width:0;flex:0 1 auto;text-align:right}
 @media(max-width:520px){.dashboard-summary .type-summary .type-summary-row strong{font-size:16px;letter-spacing:-.4px}}
+
+
+/* Dashboard: cartões de fatura e compromissos futuros */
+.dashboard-invoice-row{padding:18px 0;border-bottom:1px solid #e8eeea}
+.dashboard-invoice-row:last-child{border-bottom:0;padding-bottom:4px}
+.dashboard-invoice-top{display:flex;align-items:center;gap:12px;min-width:0}
+.dashboard-invoice-brand{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border-radius:13px;background:#e9f1ff;color:#2456d8;font-size:23px;font-weight:800}
+.dashboard-invoice-heading{display:grid;gap:5px;min-width:0;flex:1}
+.dashboard-invoice-heading>b{font-size:15px;color:#202d26;overflow-wrap:anywhere}
+.dashboard-invoice-count{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:12px;color:#718078}
+.dashboard-invoice-count i{font-style:normal;color:#a1aaa4}
+.invoice-status-pill{font-style:normal;font-weight:750;padding:3px 9px;border-radius:999px;background:#fff2d5;color:#946313}
+.invoice-status-pill.is-paid{background:#dcf6e5;color:#18733c}
+.invoice-status-pill.is-partial{background:#fff0d6;color:#98620b}
+.invoice-status-pill.is-open{background:#ffe7e5;color:#b83232}
+.dashboard-invoice-total{flex:0 0 auto;background:#e8f2ff;color:#174b9b;padding:8px 11px;border-radius:12px;font-size:16px;white-space:nowrap}
+.dashboard-invoice-meta{display:flex;flex-wrap:wrap;gap:8px 18px;margin:13px 0 12px 54px;color:#5d6c63;font-size:12px}
+.dashboard-invoice-meta>span{display:inline-flex;align-items:center;gap:5px}
+.dashboard-invoice-meta b{color:#26372d;font-weight:750}
+.invoice-paid-dot{width:8px;height:8px;border-radius:50%;background:#1d9a50;display:inline-block}
+.dashboard-invoice-meta .invoice-open-value{color:#c33232}
+.dashboard-invoice-actions{margin-left:54px}
+.dashboard-invoice-actions .invoice-view-btn{display:inline-flex;align-items:center;gap:6px;padding:9px 13px;border-color:#cbd5df;color:#263b50;background:#fff;font-weight:750}
+.future-month-row{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #e9eeeb;min-width:0}
+.future-month-row:last-child{border-bottom:0;padding-bottom:3px}
+.future-month-badge{width:54px;height:54px;flex:0 0 54px;border-radius:13px;background:#e5f1ff;color:#174b9b;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.05}
+.future-month-badge b{font-size:13px;letter-spacing:.03em}
+.future-month-badge small{font-size:11px;font-weight:700;margin-top:3px;color:inherit}
+.future-month-tone-1 .future-month-badge,.future-month-tone-3 .future-month-badge{background:#eee8ff;color:#5b3ba4}
+.future-month-tone-2 .future-month-badge{background:#e2f5e9;color:#207343}
+.future-month-info{display:grid;gap:5px;min-width:0;flex:1}
+.future-month-info>b{font-size:14px;color:#26372d;text-transform:capitalize;overflow-wrap:anywhere}
+.future-month-info>small{font-size:12px;color:#718078}
+.future-month-total{flex:0 0 auto;background:#e8f2ff;color:#174b9b;padding:8px 11px;border-radius:12px;font-size:15px;white-space:nowrap}
+:root[data-theme="dark"] .dashboard-invoice-row,:root[data-theme="dark"] .future-month-row{border-color:#35463b}
+:root[data-theme="dark"] .dashboard-invoice-heading>b,:root[data-theme="dark"] .future-month-info>b{color:#edf5ef}
+:root[data-theme="dark"] .dashboard-invoice-meta{color:#b8c8bd}
+:root[data-theme="dark"] .dashboard-invoice-meta b{color:#edf5ef}
+:root[data-theme="dark"] .dashboard-invoice-meta .invoice-open-value{color:#ffaaa5}
+:root[data-theme="dark"] .dashboard-invoice-total,:root[data-theme="dark"] .future-month-total{background:#233b5c;color:#c7ddff}
+:root[data-theme="dark"] .dashboard-invoice-brand{background:#233b5c;color:#c7ddff}
+:root[data-theme="dark"] .dashboard-invoice-actions .invoice-view-btn{background:#202d26;border-color:#506356;color:#edf5ef}
+:root[data-theme="dark"] .future-month-badge{background:#233b5c;color:#c7ddff}
+:root[data-theme="dark"] .future-month-tone-1 .future-month-badge,:root[data-theme="dark"] .future-month-tone-3 .future-month-badge{background:#382d55;color:#d8c9ff}
+:root[data-theme="dark"] .future-month-tone-2 .future-month-badge{background:#1e432d;color:#b6dfc2}
+@media(max-width:520px){.dashboard-invoice-row{padding:15px 0}.dashboard-invoice-brand{width:38px;height:38px;flex-basis:38px}.dashboard-invoice-heading>b{font-size:14px}.dashboard-invoice-total{font-size:14px;padding:7px 9px}.dashboard-invoice-meta,.dashboard-invoice-actions{margin-left:50px}.dashboard-invoice-meta{gap:6px 12px;font-size:11px}.future-month-row{gap:9px}.future-month-badge{width:48px;height:48px;flex-basis:48px}.future-month-info>b{font-size:13px}.future-month-total{font-size:13px;padding:7px 8px}}
