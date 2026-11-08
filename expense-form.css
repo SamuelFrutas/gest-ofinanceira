@@ -137,3 +137,16 @@
     min-width:0!important;
   }
 }
+
+/* Foco discreto nos campos do lançamento: evita o contorno global exagerado */
+#expenseModal .expense-field input:focus,
+#expenseModal .expense-field select:focus,
+#expenseModal .expense-field textarea:focus,
+#expenseModal .expense-field input:focus-visible,
+#expenseModal .expense-field select:focus-visible,
+#expenseModal .expense-field textarea:focus-visible{
+ outline:none!important;
+ outline-offset:0!important;
+ border-color:#70b989!important;
+ box-shadow:0 0 0 2px #16a34a14!important;
+}
