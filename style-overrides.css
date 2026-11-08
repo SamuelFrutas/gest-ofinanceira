@@ -492,3 +492,9 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 
 /* Abas de categorias pessoais e empresariais */
 .category-type-tabs{display:flex;gap:8px;margin:0 0 16px;padding:4px;border:1px solid #e4ebe6;border-radius:13px;background:#f7faf8}.category-type-tab{flex:1;min-width:0;padding:11px 14px;border:1px solid transparent;border-radius:10px;background:transparent;color:#64746a;font-weight:750;font-size:13px;cursor:pointer}.category-type-tab.active{background:#fff;border-color:#dce8df;color:#176b3b;box-shadow:0 2px 7px #173b240a}@media(max-width:480px){.category-type-tabs{gap:5px}.category-type-tab{padding:10px 7px;font-size:12px}}
+
+
+/* Descrição destacada pela cor da categoria; situação mantém sua própria cor */
+.expense-name-tag{display:inline-flex;align-items:center;max-width:100%;width:fit-content;padding:5px 9px;border-radius:8px;background:color-mix(in srgb,var(--expense-category-color) 13%,var(--surface,#fff));border:1px solid color-mix(in srgb,var(--expense-category-color) 30%,transparent);color:var(--text,#26372d);line-height:1.35;overflow-wrap:anywhere;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.expense-card .expense-name-tag{font-size:13px;font-weight:800}
+:root[data-theme="dark"] .expense-name-tag{background:color-mix(in srgb,var(--expense-category-color) 22%,var(--surface,#17221b));border-color:color-mix(in srgb,var(--expense-category-color) 42%,transparent);color:var(--text,#edf5ef)}
