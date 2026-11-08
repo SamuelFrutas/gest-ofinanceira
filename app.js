@@ -211,12 +211,9 @@ function dash(){
  $('monthLabel').textContent=d(st.month).toLocaleDateString('pt-BR',{month:'long',year:'numeric'}).replace(/^./,x=>x.toUpperCase());
  $('totalExpenses').textContent=money(t);$('paidExpenses').textContent=money(paidTotal);$('personalExpenses').textContent=money(p);$('companyExpenses').textContent=money(company);
  $('pendingExpenses').textContent=money(l.reduce((a,e)=>a+remaining(e),0));
- const todayAlert=iso(new Date()),limitAlert=iso(add(todayAlert,2));
- const alertEntries=dueAlertEntries();
- const overdue=alertEntries.filter(e=>e.due<todayAlert).sort((a,b)=>a.due.localeCompare(b.due));
- const soon=alertEntries.filter(e=>e.due>=todayAlert&&e.due<=limitAlert).sort((a,b)=>a.due.localeCompare(b.due));
+ const todayAlert=iso(new Date());
+ const overdue=dueAlertEntries().filter(e=>e.due<todayAlert).sort((a,b)=>a.due.localeCompare(b.due));
  $('alertOverdueCount').textContent=String(overdue.length);$('alertOverdueValue').textContent=money(overdue.reduce((a,e)=>a+e.amount,0));
- $('alertSoonCount').textContent=String(soon.length);$('alertSoonValue').textContent=money(soon.reduce((a,e)=>a+e.amount,0));
  const categoryBars=type=>{const values={};l.filter(e=>e.type===type).forEach(e=>values[e.category]=(values[e.category]||0)+e.amount);const entries=Object.entries(values).sort((a,b)=>b[1]-a[1]),max=Math.max(...entries.map(x=>x[1]),1);return entries.length?entries.map(([name,value],index)=>{const color=categoryColor(name,st.categories.indexOf(name)>=0?st.categories.indexOf(name):index);return `<button type="button" class="report-bar-row category-drill-row" data-category-drill="${esc(name)}" data-category-type="${type}"><span class="category-drill-label"><span><i class="category-color-dot" style="background:${color}"></i>${esc(name)}</span><b>${money(value)}</b></span><span class="report-bar-track"><i style="width:${value/max*100}%;background:${color}"></i></span></button>`}).join(''):'<div class="empty">Nenhuma despesa neste mês.</div>'};
  $('personalCategoryChart').innerHTML=categoryBars('Pessoal');$('companyCategoryChart').innerHTML=categoryBars('Empresa');
  $('expenseList').innerHTML=l.filter(e=>!e.cardId).slice().sort((a,b)=>(b.dueDate||b.date).localeCompare(a.dueDate||a.date)).slice(0,8).map(row).join('')||'<div class="empty">Nenhuma despesa bancária recente.</div>';
