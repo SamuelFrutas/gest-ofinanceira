@@ -50,9 +50,9 @@
  <section class="expense-section">
   <div class="expense-section-heading"><span class="expense-section-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H10l2 2h6.5A2.5 2.5 0 0 1 21 9.5v8a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5z"/><path d="M3.5 10h17"/></svg></span><div class="expense-section-heading-copy"><b>Classificação</b><small>Organize onde essa despesa se encaixa</small></div></div>
   <div class="expense-section-grid">
-   <label class="expense-field">Categoria <span class="required-mark">*</span><select name="category" id="expenseCategory"></select></label>
+   <label class="expense-field expense-full-field">Tipo de lançamento <span class="required-mark">*</span><select name="type" id="expenseType" required><option value="Pessoal">Pessoal</option><option value="Empresa">Empresa</option></select></label>
+   <label class="expense-field">Categoria <span class="required-mark">*</span><select name="category" id="expenseCategory" required></select></label>
    <label class="expense-field">Subcategoria<select name="subcategory" id="expenseSubcategory"><option value="">Sem subcategoria</option></select></label>
-   <label class="expense-field expense-full-field">Tipo<select name="type"><option>Pessoal</option><option>Empresa</option></select></label>
   </div>
  </section>
  <section class="expense-section">
