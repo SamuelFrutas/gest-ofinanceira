@@ -392,3 +392,71 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
  .conditional-fields-grid{grid-template-columns:1fr 1fr}
  .conditional-fields-grid label:last-child:nth-child(odd){grid-column:1/-1}
 }
+
+
+/* Redesign fiel à proposta: formulário dividido em cartões e seções */
+.expense-entry-modal{width:min(680px,100%);max-height:94vh;padding:22px;background:#f6f9f6;border:1px solid #e4ece6;box-shadow:0 24px 70px #12251a30}
+.expense-entry-modal>.modal-head{position:sticky;top:-22px;z-index:3;margin:-22px -22px 16px;padding:18px 22px 14px;background:#fff;border-bottom:1px solid #e8eee9;border-radius:22px 22px 0 0}
+.expense-entry-modal .modal-head h2{font-size:22px;font-weight:800;color:#1d3526}
+.expense-entry-form{display:block!important}
+.expense-form-layout{display:grid;gap:13px}
+.expense-hero-section,.expense-section{padding:16px;background:#fff;border:1px solid #e4ebe5;border-radius:17px;box-shadow:0 3px 12px #183b2410}
+.expense-section-kicker{font-size:10px;font-weight:850;letter-spacing:.12em;color:#279253;margin-bottom:12px}
+.expense-field{display:block;min-width:0;font-size:12px;font-weight:750;color:#415248}
+.expense-field input,.expense-field select,.expense-field textarea{display:block;width:100%;min-width:0;margin-top:6px;padding:12px 13px;border:1px solid #dce5de;border-radius:11px;background:#fbfdfb;color:#26372d;font:inherit;font-size:14px;font-weight:550;box-sizing:border-box}
+.expense-field textarea{resize:vertical;min-height:78px}
+.expense-field input:focus,.expense-field select:focus,.expense-field textarea:focus{outline:0;border-color:#269653;box-shadow:0 0 0 3px #16a34a18;background:#fff}
+.expense-description{font-size:13px}
+.expense-description .input-action-wrap{margin-top:7px}
+.expense-description .input-action-wrap input{margin:0;background:#fff}
+.expense-description .input-icon-btn,.expense-value .input-icon-btn{height:47px;flex-basis:46px;width:46px}
+.voice-status{display:block;margin-top:6px;color:#87958b;font-size:10px;font-weight:450}
+.expense-value-date{display:grid;grid-template-columns:1.1fr .9fr;gap:11px;margin-top:14px}
+.expense-value{padding:13px;border:1px solid #cde8d4;border-radius:13px;background:#f0faf3;color:#176b38}
+.expense-value .input-action-wrap{display:flex;align-items:center;gap:5px;margin-top:6px}
+.expense-value input{margin:0;padding:9px 4px;border:0;background:transparent;box-shadow:none!important;font-size:24px;font-weight:850;color:#14532d}
+.currency-prefix{font-size:13px;font-weight:800;color:#348454}
+.expense-value .input-icon-btn{background:#fff;border-color:#d8e9dc}
+.expense-date input{min-height:47px}
+.expense-section-heading{display:flex;align-items:center;gap:10px;margin-bottom:13px}
+.expense-section-icon{width:34px;height:34px;display:grid;place-items:center;flex:0 0 34px;border-radius:11px;background:#edf7ef;color:#24834a;font-size:20px;font-weight:800}
+.expense-section-heading div{display:grid;gap:2px}
+.expense-section-heading b{font-size:14px;color:#253a2c}
+.expense-section-heading small{font-size:10px;color:#849188;font-weight:450}
+.expense-section-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.expense-full-field{grid-column:1/-1}
+.required-mark{color:#dc2626}.optional-mark{font-weight:450;color:#87958b}
+.expense-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.expense-option{position:relative;display:flex!important;align-items:center;gap:9px;padding:13px 11px;border:1px solid #e0e9e2;border-radius:13px;background:#fbfdfb;cursor:pointer;min-width:0}
+.expense-option:has(input:checked){border-color:#68b982;background:#f0faf3}
+.expense-option input{width:18px;height:18px;flex:0 0 18px;accent-color:#16a34a;margin:0}
+.expense-option span{display:grid;gap:3px;min-width:0}
+.expense-option b{font-size:11px;color:#304638}
+.expense-option small{font-size:9px;color:#849188;font-weight:450}
+.expense-option-check{display:none;margin-left:auto;color:#198447;font-style:normal;font-weight:900}
+.expense-option:has(input:checked) .expense-option-check{display:block}
+.expense-conditional-panel{margin-top:11px;padding:14px;border:1px solid #b9dfc5;border-radius:14px;background:#f2fbf5}
+.conditional-panel-title{font-size:13px;font-weight:850;color:#176b38;margin-bottom:10px}
+.conditional-fields-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.expense-conditional-panel label{display:block;min-width:0;font-size:11px}
+.expense-conditional-panel input,.expense-conditional-panel select{width:100%;min-width:0;margin-top:6px;padding:10px;border:1px solid #d4e3d8;border-radius:10px;background:#fff;box-sizing:border-box}
+.expense-conditional-panel .muted{margin:9px 0 0;font-size:10px}
+.expense-note-section{padding:14px}
+.expense-note textarea{background:#fbfdfb}
+.expense-save-btn{display:flex;justify-content:center;align-items:center;gap:10px;width:100%;padding:15px;border-radius:14px;font-size:15px;box-shadow:0 5px 12px #16a34a30}
+.expense-save-btn span{font-size:19px}
+@media(max-width:520px){
+ .expense-entry-modal{width:100%;max-height:94dvh;padding:12px;border-radius:20px}
+ .expense-entry-modal>.modal-head{top:-12px;margin:-12px -12px 12px;padding:15px 16px 12px;border-radius:20px 20px 0 0}
+ .expense-form-layout{gap:10px}
+ .expense-hero-section,.expense-section{padding:13px;border-radius:15px}
+ .expense-section-grid{grid-template-columns:1fr;gap:10px}
+ .expense-full-field{grid-column:1}
+ .expense-options{grid-template-columns:1fr}
+ .conditional-fields-grid{grid-template-columns:1fr 1fr}
+ .conditional-fields-grid label:last-child:nth-child(odd){grid-column:1/-1}
+ .expense-value-date{grid-template-columns:1fr 1fr;gap:8px}
+ .expense-value{padding:10px}
+ .expense-value input{font-size:20px}
+ .expense-field input,.expense-field select{padding:11px}
+}
