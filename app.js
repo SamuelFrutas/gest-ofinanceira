@@ -1,4 +1,4 @@
-import { auth, db } from './js/firebase.js';
+import { auth, db } from './js/firebase.js?v=2';
 import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
 import { doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
 const $=id=>document.getElementById(id),K='gf3_data';const C=['Alimentação','Casa','Transporte','Saúde','Educação','Lazer','Trabalho','Outros'];const uid=()=>crypto.randomUUID(),money=n=>new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'}).format(+n||0),pm=v=>{v=String(v||'').replace(/R\$|\s/g,'');return +(v.includes(',')?v.replace(/\./g,'').replace(',','.'):v.replace(/[^0-9.-]/g,''))||0},esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));let st;try{st=JSON.parse(localStorage.getItem(K)||'null')}catch{}st=Object.assign({expenses:[],cards:[],categories:C.slice(),settings:{tithe:10},month:new Date().toISOString().slice(0,10)},st||{});st.categories=[...new Set(st.categories||C)];let cloudReady=false,cloudUser=null,cloudWrite=Promise.resolve();
