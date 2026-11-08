@@ -61,7 +61,7 @@
       e.partialPayments=Array.isArray(e.partialPayments)?e.partialPayments:[];
       e.partialPayments.push({amount:pago,date:new Date().toISOString()});
       e.status=remaining(e)<=0.005?'pago':'parcial';
-      save(s);location.reload();return;
+      save(s);Promise.resolve(window.gf3PersistLocal?.()).finally(()=>location.reload());return;
     }
     const pay=event.target.closest('[data-a="pay"]');
     if(pay){
