@@ -124,3 +124,83 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
  .topbar{padding-left:14px;padding-right:14px}
  .container{padding:14px}
 }
+
+
+/* Revisão abrangente do tema escuro: superfícies e controles secundários */
+:root[data-theme="dark"] .expense-card,
+:root[data-theme="dark"] .expense-row,
+:root[data-theme="dark"] .dashboard-category-block,
+:root[data-theme="dark"] .dashboard-invoice-row,
+:root[data-theme="dark"] .calendar-day,
+:root[data-theme="dark"] .category-detail-summary,
+:root[data-theme="dark"] .category-setting-colored,
+:root[data-theme="dark"] .palette-swatch,
+:root[data-theme="dark"] .calculator-card,
+:root[data-theme="dark"] .calculator-display,
+:root[data-theme="dark"] .calculator-keys button,
+:root[data-theme="dark"] .input-icon-btn,
+:root[data-theme="dark"] .expense-toolbar,
+:root[data-theme="dark"] .expense-status-tabs button,
+:root[data-theme="dark"] .expense-filter-details,
+:root[data-theme="dark"] .filters,
+:root[data-theme="dark"] .results-bar,
+:root[data-theme="dark"] .calendar-selected-panel,
+:root[data-theme="dark"] .calendar-event,
+:root[data-theme="dark"] .invoice-summary,
+:root[data-theme="dark"] .invoice-purchases-heading,
+:root[data-theme="dark"] .user-box,
+:root[data-theme="dark"] .install-app-item,
+:root[data-theme="dark"] .dashboard-alert-item,
+:root[data-theme="dark"] .shortcut-card{
+ background:#1b2620;color:#edf5ef;border-color:#405246
+}
+:root[data-theme="dark"] .expense-card.overdue-expense{background:#3b2020;border-color:#854343}
+:root[data-theme="dark"] .expense-card.due-today-expense{background:#42391d;border-color:#806b2d}
+:root[data-theme="dark"] .calendar-day.selected{background:#234331;border-color:#55bd7d}
+:root[data-theme="dark"] .calendar-day.is-today span{color:#8ce6ae}
+:root[data-theme="dark"] .dashboard-category-block h4,
+:root[data-theme="dark"] .dashboard-invoice-top,
+:root[data-theme="dark"] .expense-name,
+:root[data-theme="dark"] .calendar-event-main b{color:#edf5ef}
+:root[data-theme="dark"] .category-drill-row:hover{background:#29382f}
+:root[data-theme="dark"] .expense-status-tabs button{color:#dce9df;border-color:#526457}
+:root[data-theme="dark"] .expense-status-tabs button.active{background:#245b3a;color:#fff;border-color:#5bc582}
+:root[data-theme="dark"] .calculator-display{background:#111a15;border-color:#526457;color:#f4faf5}
+:root[data-theme="dark"] .calculator-keys .calc-op,
+:root[data-theme="dark"] .calculator-keys .calc-equals{background:#245b3a;color:#eafff0}
+:root[data-theme="dark"] .calculator-keys .calc-clear{background:#552d2b;color:#ffd5d1}
+:root[data-theme="dark"] .input-icon-btn{background:#29382f;color:#a8e8bd;border-color:#526457}
+:root[data-theme="dark"] .install-app-item{background:#233d2d;color:#b9f0ca;border-color:#426b50}
+:root[data-theme="dark"] .status.partial{background:#59451f;color:#ffe0a3}
+:root[data-theme="dark"] .status.overdue{background:#5a2929;color:#ffc0c0}
+:root[data-theme="dark"] .report-bar-track{background:#34463a}
+:root[data-theme="dark"] .login-input{background:#17211b;color:#f2f7f3}
+:root[data-theme="dark"] .due-notice-card{background:#302713;border:2px solid #d69a24;box-shadow:0 22px 70px #0009}
+:root[data-theme="dark"] .due-notice-card .eyebrow{color:#ffd166}
+:root[data-theme="dark"] .due-notice-row{background:#3a301b;border-color:#80652a;color:#fff2cf}
+:root[data-theme="dark"] .due-notice-total{border-color:#80652a;color:#fff2cf}
+:root[data-theme="dark"] .due-notice-confirm{background:#b77912;color:#fff;border:1px solid #f0bd55}
+:root[data-theme="dark"] .due-notice-card>p{color:#f0dcae}
+:root[data-theme="dark"] .bank-card{color:#f3f7f4}
+:root[data-theme="dark"] .bank-card [style*="background"]{color:#f3f7f4}
+:root[data-theme="dark"] .report-bar-row,
+:root[data-theme="dark"] .expense-row,
+:root[data-theme="dark"] .calendar-event{border-color:#35463b}
+:root[data-theme="dark"] .secondary-btn,
+:root[data-theme="dark"] .mini-btn{background:#29382f;color:#edf5ef;border-color:#526457}
+:root[data-theme="dark"] .text-btn{color:#8fe2ad}
+
+/* Navegação inferior fixa para telas pequenas */
+.mobile-bottom-nav{display:none}
+@media(max-width:700px){
+ .mobile-bottom-nav{position:fixed;z-index:30;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;padding:7px max(8px,env(safe-area-inset-left)) calc(7px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #dfe7e1;box-shadow:0 -8px 24px #17231c12}
+ .mobile-bottom-nav button{min-width:0;min-height:54px;padding:5px 2px;border:0;border-radius:11px;background:transparent;color:#64756a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font:inherit}
+ .mobile-bottom-nav button .ui-icon{width:20px;height:20px}
+ .mobile-bottom-nav button span{font-size:10px;font-weight:750;white-space:nowrap}
+ .mobile-bottom-nav button:active,.mobile-bottom-nav button:focus-visible{background:#eaf5ed;color:#176b3b}
+ .container{padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+ :root[data-theme="dark"] .mobile-bottom-nav{background:#18231d;border-color:#405246;box-shadow:0 -8px 24px #0005}
+ :root[data-theme="dark"] .mobile-bottom-nav button{color:#c3d2c8}
+ :root[data-theme="dark"] .mobile-bottom-nav button:active,:root[data-theme="dark"] .mobile-bottom-nav button:focus-visible{background:#294633;color:#b8f0cb}
+ body[data-easy-touch="true"] .mobile-bottom-nav button{min-height:58px}
+}
