@@ -3,7 +3,7 @@ import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/11.10.0/f
 import { doc, getDoc, setDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
 const $=id=>document.getElementById(id),K='gf3_data';const CATEGORY_CATALOG={Pessoal:{'Veículo pessoal':['Parcela do carro','Gasolina','Manutenção'],'Moradia':['Energia','Água','Supermercado'],'Alimentação':['Lanches'],'Saúde':['Exame','Consulta','Remédio'],'Vestuário':['Roupas','Calçados'],'Família':['Esposa','Filha'],'Empréstimos':['Empréstimos pessoais'],'Renegociação de dívidas':['Acordos','Parcelamentos de dívidas'],'Lazer':['Passeios','Entretenimento']},Empresa:{'Veículo da empresa':['Parcela do carro','Combustível','Manutenção'],'Taxas e impostos':['Impostos','Licenças','Contadora'],'Alimentação da empresa':['Refeições'],'Empréstimos empresariais':['Parcelas de empréstimos','Renegociações']}};const C=[...Object.keys(CATEGORY_CATALOG.Pessoal),...Object.keys(CATEGORY_CATALOG.Empresa)];const applyCategoryCatalog=()=>{if((+st.categoryCatalogVersion||0)>=2)return false;st.categories=C.slice();st.subcategories={};st.categoryTypes={};Object.entries(CATEGORY_CATALOG).forEach(([type,cats])=>Object.entries(cats).forEach(([name,subs])=>{st.subcategories[name]=subs.slice();st.categoryTypes[name]=type}));st.categoryColors={};st.categoryCatalogVersion=2;return true};const applyExpenseCleanup=()=>{if((+st.expenseCleanupVersion||0)>=1)return false;st.expenses=[];st.expenseCleanupVersion=1;return true};const applyCompanyCarInstallments=()=>{if((+st.companyCarInstallmentsVersion||0)>=1)return false;const series=uid();for(let number=9;number<=60;number++){const due=add('2026-10-28',number-9,28);const date=iso(due);st.expenses.push({id:uid(),seriesId:series,installmentNumber:number,installmentTotal:60,description:'Parcela do carro da empresa',amount:1568,date,dueDate:date,category:'Veículo da empresa',subcategory:'Parcela do carro',type:'Empresa',payment:'Conta bancária',cardId:null,note:'',status:'pendente',paidDate:null,paidAmount:0})}st.companyCarInstallmentsVersion=1;return true};const applyBancoBrasilNov2026Invoice=()=>{
  if((+st.bancoBrasilNov2026InvoiceVersion||0)>=1)return false;
- const card=st.cards.find(c=>/banco\\s*do\\s*brasil/i.test(String(c.bank||'')+' '+String(c.name||'')));
+ const card=st.cards.find(c=>/banco\s*do\s*brasil/i.test(String(c.bank||'')+' '+String(c.name||'')));
  if(!card)return false;
  const date='2026-10-24',series=()=>uid();
  const rows=[
@@ -12,7 +12,7 @@ const $=id=>document.getElementById(id),K='gf3_data';const CATEGORY_CATALOG={Pes
   ['Lanche',11,'Pessoal','Alimentação','Lanches'],
   ['Gasolina',196,'Empresa','Veículo da empresa','Combustível'],
   ['Laboratório Pierre — exame da filha',106.68,'Pessoal','Saúde','Exame',1,3],
-  ['Refeições fora',85,'Pessoal','Lazer','Refeições fora'],
+  ['Aleatório',85,'Pessoal','Lazer','Refeições fora'],
   ['Supermercado BH',186.59,'Pessoal','Moradia','Supermercado',1,3],
   ['Drogaria Primeiro Passo',109.25,'Pessoal','Saúde','Remédio',2,2],
   ['Supermercado BH',155.75,'Pessoal','Moradia','Supermercado',2,3],
