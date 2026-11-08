@@ -55,3 +55,8 @@
 :root[data-theme="dark"] #expenseModal .expense-option{background:#17241c;border-color:#405246}
 :root[data-theme="dark"] #expenseModal .expense-option:has(input:checked),:root[data-theme="dark"] #expenseModal .expense-conditional-panel{background:#1c3324;border-color:#477b55}
 :root[data-theme="dark"] #expenseModal .expense-conditional-panel input,:root[data-theme="dark"] #expenseModal .expense-conditional-panel select{background:#142019;border-color:#46594b;color:#edf5ef}
+/* Ícones vetoriais consistentes: sem emojis no formulário */
+#expenseModal .expense-section-icon{font-size:0!important}
+#expenseModal .expense-section-icon svg{display:block;width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#expenseModal .expense-section-kicker{display:flex;align-items:center;gap:8px}
+#expenseModal .expense-kicker-icon{display:block;width:15px;height:15px;flex:0 0 15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
