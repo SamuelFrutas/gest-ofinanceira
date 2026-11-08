@@ -354,3 +354,41 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 :root[data-theme="dark"] .category-main-card,:root[data-theme="dark"] .subcategory-form{background:#1b2620;border-color:#405246;color:#edf5ef}
 :root[data-theme="dark"] .subcategory-row{border-color:#35463b}
 @media(max-width:520px){.category-main-card{padding:13px;gap:8px}.category-manage-btn{padding:8px 11px}.category-manager-main{gap:7px}.category-manager-main>span{margin-right:0}.category-manager-main button{font-size:12px;padding:8px}}
+
+
+/* Formulário de lançamento de despesas — layout reorganizado */
+.expense-entry-modal{width:min(720px,100%);padding:22px;max-height:94vh}
+.expense-entry-modal .modal-head h2{font-size:22px;margin:0}
+.expense-entry-form{display:block!important}
+.expense-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.expense-field{display:block;min-width:0;font-size:13px;font-weight:750;color:#26372d}
+.expense-field input,.expense-field select,.expense-field textarea{display:block;width:100%;min-width:0;margin-top:6px;padding:12px 13px;border:1px solid #d9e2dc;border-radius:12px;background:#fff;color:#26372d;font:inherit;font-size:15px;font-weight:500;box-sizing:border-box}
+.expense-field textarea{resize:vertical;min-height:76px}
+.expense-field input:focus,.expense-field select:focus,.expense-field textarea:focus{outline:0;border-color:#269653;box-shadow:0 0 0 3px #16a34a18}
+.expense-description,.expense-note,.expense-options,.expense-conditional-panel,.expense-save-btn{grid-column:1/-1}
+.expense-value input{font-size:20px;font-weight:800;color:#14532d;background:#f1fbf4}
+.expense-value .input-action-wrap,.expense-description .input-action-wrap{margin-top:6px}
+.expense-value .input-action-wrap input,.expense-description .input-action-wrap input{margin:0}
+.expense-value .input-icon-btn,.expense-description .input-icon-btn{height:47px;flex-basis:48px;width:48px}
+.expense-value .calculator-action{background:#edf8f0;border-color:#cde8d5}
+.required-mark{color:#dc2626}.optional-mark{font-weight:450;color:#718078}
+.expense-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.expense-option{display:flex!important;align-items:center;gap:10px;padding:13px;border:1px solid #dce6df;border-radius:13px;background:#fbfdfb;cursor:pointer;min-width:0}
+.expense-option input{width:19px;height:19px;flex:0 0 19px;accent-color:#16a34a;margin:0}
+.expense-option span{display:grid;gap:3px;min-width:0}.expense-option b{font-size:13px}.expense-option small{font-size:11px;color:#718078;font-weight:450}
+.expense-conditional-panel{padding:14px;border:1px solid #b9dfc5;border-radius:14px;background:#f2fbf5}
+.conditional-panel-title{font-size:14px;font-weight:800;color:#176b38;margin-bottom:10px}
+.conditional-fields-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.expense-conditional-panel label{display:block;min-width:0;font-size:12px}
+.expense-conditional-panel input,.expense-conditional-panel select{width:100%;min-width:0;margin-top:6px;padding:10px;border:1px solid #d4e3d8;border-radius:10px;background:#fff;box-sizing:border-box}
+.expense-conditional-panel .muted{margin:9px 0 0;font-size:11px}
+.expense-save-btn{display:flex;justify-content:center;align-items:center;gap:10px;width:100%;padding:15px;border-radius:13px;font-size:16px}
+.expense-save-btn span{font-size:20px}
+@media(max-width:520px){
+ .expense-entry-modal{width:100%;max-height:94dvh;padding:17px;border-radius:20px}
+ .expense-form-grid{grid-template-columns:1fr;gap:12px}
+ .expense-description,.expense-note,.expense-options,.expense-conditional-panel,.expense-save-btn{grid-column:1}
+ .expense-options{grid-template-columns:1fr}
+ .conditional-fields-grid{grid-template-columns:1fr 1fr}
+ .conditional-fields-grid label:last-child:nth-child(odd){grid-column:1/-1}
+}
