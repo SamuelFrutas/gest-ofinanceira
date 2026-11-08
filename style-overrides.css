@@ -270,3 +270,13 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 :root[data-theme="dark"] .future-month-tone-1 .future-month-badge,:root[data-theme="dark"] .future-month-tone-3 .future-month-badge{background:#382d55;color:#d8c9ff}
 :root[data-theme="dark"] .future-month-tone-2 .future-month-badge{background:#1e432d;color:#b6dfc2}
 @media(max-width:520px){.dashboard-invoice-row{padding:15px 0}.dashboard-invoice-brand{width:38px;height:38px;flex-basis:38px}.dashboard-invoice-heading>b{font-size:14px}.dashboard-invoice-total{font-size:14px;padding:7px 9px}.dashboard-invoice-meta,.dashboard-invoice-actions{margin-left:50px}.dashboard-invoice-meta{gap:6px 12px;font-size:11px}.future-month-row{gap:9px}.future-month-badge{width:48px;height:48px;flex-basis:48px}.future-month-info>b{font-size:13px}.future-month-total{font-size:13px;padding:7px 8px}}
+
+/* Ícones dos cabeçalhos e identificação real da cor de cada cartão */
+.section-symbol svg,.dashboard-invoice-brand svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.section-symbol-card{background:#e9f1ff;color:#2876a8}
+.section-symbol-calendar{background:#e2f5e9;color:#238653}
+.dashboard-invoice-brand{background:color-mix(in srgb,var(--invoice-card-accent) 13%,white);color:var(--invoice-card-accent);font-size:initial}
+.dashboard-invoice-brand svg{width:22px;height:22px}
+:root[data-theme="dark"] .section-symbol-card{background:#233b5c;color:#9dc7ff}
+:root[data-theme="dark"] .section-symbol-calendar{background:#1e432d;color:#9bdbb0}
+:root[data-theme="dark"] .dashboard-invoice-brand{background:color-mix(in srgb,var(--invoice-card-accent) 25%,#202d26);color:color-mix(in srgb,var(--invoice-card-accent) 65%,white)}
