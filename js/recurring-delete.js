@@ -33,6 +33,6 @@
     }
 
     localStorage.setItem(KEY,JSON.stringify(state));
-    location.reload();
+    Promise.resolve(window.gf3PersistLocal?.()).finally(()=>location.reload());
   },true);
 })();
