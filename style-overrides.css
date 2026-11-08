@@ -220,3 +220,7 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 :root[data-theme="dark"] .type-summary-row strong{color:#edf5ef}
 :root[data-theme="dark"] .type-summary-row+.type-summary-row{border-color:#35463b}
 @media(max-width:520px){.dashboard-summary .type-summary{gap:11px}.type-summary-row strong{font-size:17px}}
+
+/* Ajuste de tamanho e encaixe dos valores Empresa/Pessoal */
+.dashboard-summary .type-summary .type-summary-row strong{font-size:17px;letter-spacing:-.35px;min-width:0;flex:0 1 auto;text-align:right}
+@media(max-width:520px){.dashboard-summary .type-summary .type-summary-row strong{font-size:16px;letter-spacing:-.4px}}
