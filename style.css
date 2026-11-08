@@ -64,3 +64,9 @@
 .expense-card .row-actions{gap:8px!important}
 .expense-card .invoice-view-btn{font-size:13px!important;padding:10px 14px!important;min-height:40px!important}
 @media(max-width:520px){.expense-card .row-actions .mini-btn{font-size:13px!important;padding:10px 12px!important;min-height:42px!important}.expense-card .row-actions{gap:7px!important}}
+
+/* Padroniza a tipografia dos estados em despesas comuns e faturas */
+.expense-card .status,
+.invoice-expense-row .status,
+.expense-info .status{font-size:13px!important;font-weight:800!important;line-height:1.25!important;padding:5px 10px!important;min-height:0!important;letter-spacing:0!important}
+.invoice-expense-row .expense-info>.status{width:max-content!important;max-width:max-content!important;flex:0 0 auto!important;align-self:flex-start!important}
