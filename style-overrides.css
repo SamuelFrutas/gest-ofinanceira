@@ -324,3 +324,9 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 :root[data-theme="dark"] .weekly-metric.total{background:#233b5c;border-color:#35547c;color:#b9d0ff}
 :root[data-theme="dark"] .weekly-progress-head strong{color:#9bdbb0}
 @media(max-width:420px){.weekly-metrics{gap:7px}.weekly-metric{padding:11px 8px}.weekly-metric strong{font-size:13px}.weekly-metric span{font-size:11px}.weekly-progress{padding:13px}}
+
+/* Resumo semanal: pendências anteriores separadas das contas da semana */
+.weekly-metrics{grid-template-columns:repeat(4,minmax(0,1fr))}
+.weekly-metric.previous{background:#fff3df;border-color:#f2d8ae;color:#a65a08}
+:root[data-theme="dark"] .weekly-metric.previous{background:#50391f;border-color:#76532a;color:#ffd08a}
+@media(max-width:540px){.weekly-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
