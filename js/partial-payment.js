@@ -61,7 +61,7 @@
       e.partialPayments=Array.isArray(e.partialPayments)?e.partialPayments:[];
       e.partialPayments.push({amount:pago,date:new Date().toISOString()});
       e.status=remaining(e)<=0.005?'pago':'parcial';
-      save(s);Promise.resolve(window.gf3PersistLocal?.()).finally(()=>location.reload());return;
+      save(s);Promise.resolve(window.gf3PersistLocal?.()).then(()=>window.gf3Refresh?.()).catch(error=>console.error('Falha ao atualizar pagamento:',error));return;
     }
     const pay=event.target.closest('[data-a="pay"]');
     if(pay){
@@ -74,7 +74,7 @@
         e.paidAmount=+e.amount||0;
         e.status='pago';
       }
-      save(s);Promise.resolve(window.gf3PersistLocal?.()).finally(()=>location.reload());
+      save(s);Promise.resolve(window.gf3PersistLocal?.()).then(()=>window.gf3Refresh?.()).catch(error=>console.error('Falha ao atualizar pagamento:',error));
     }
   },true);
   observer=new MutationObserver(()=>decorate());
