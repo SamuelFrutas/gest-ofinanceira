@@ -224,3 +224,24 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 .recurring-delete-actions button{width:100%;min-height:46px;text-align:center;white-space:normal}
 .recurring-delete-future{border:1px solid #fecaca;background:#fff7f7;color:#b91c1c;border-radius:12px;padding:12px 16px;font-size:14px;font-weight:800}
 :root[data-theme="dark"] .recurring-delete-future{background:#3a2424;color:#fecaca;border-color:#704343}
+
+
+/* Refinamento visual da tela de dízimo */
+.tithe-month-nav{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:12px;padding:12px 14px;margin-bottom:16px;background:linear-gradient(135deg,#f4faf5 0%,#fff 100%);border-color:#dce9df}
+.tithe-month-nav strong{text-align:center;color:#20392a;font-size:16px;font-weight:800;letter-spacing:.2px}
+.tithe-month-nav .mini-btn{width:44px;min-width:44px;height:44px;padding:0;border:1px solid #d5e5d9;border-radius:13px;background:#eaf4ed;color:#176b3b;font-size:26px;line-height:1}
+.tithe-month-nav .mini-btn:disabled{opacity:.35;cursor:not-allowed}
+.tithe-card{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-height:190px;padding:24px;border:1px solid #cfe5d5;border-radius:20px;background:linear-gradient(135deg,#edf8f0 0%,#fff 72%);box-shadow:0 10px 28px #173b2410}
+.tithe-card:before{content:"";position:absolute;width:150px;height:150px;right:-48px;top:-58px;border-radius:50%;background:#d8efdf80;pointer-events:none}
+.tithe-card span{position:relative;color:#42634d;font-size:13px;font-weight:750;letter-spacing:.35px;text-transform:uppercase}
+.tithe-card strong{position:relative;color:#176b3b;font-size:clamp(30px,6vw,42px);line-height:1.15;font-weight:850;font-variant-numeric:tabular-nums;letter-spacing:-1px}
+.tithe-card p{position:relative;margin:2px 0 0;padding-top:12px;width:100%;border-top:1px solid #d9e9dd;color:#587061;font-size:13px;line-height:1.5}
+:root[data-theme="dark"] .tithe-month-nav{background:linear-gradient(135deg,#1c3024 0%,#1b2620 100%);border-color:#405b48}
+:root[data-theme="dark"] .tithe-month-nav strong{color:#edf5ef}
+:root[data-theme="dark"] .tithe-month-nav .mini-btn{background:#293f30;border-color:#49634f;color:#a8e8bd}
+:root[data-theme="dark"] .tithe-card{background:linear-gradient(135deg,#1e3828 0%,#1b2620 78%);border-color:#42654d;box-shadow:0 10px 28px #0003}
+:root[data-theme="dark"] .tithe-card:before{background:#285b3a70}
+:root[data-theme="dark"] .tithe-card span{color:#b6d9c0}
+:root[data-theme="dark"] .tithe-card strong{color:#8fe2ad}
+:root[data-theme="dark"] .tithe-card p{border-color:#405b48;color:#c1d3c6}
+@media(max-width:520px){.tithe-month-nav{padding:10px;gap:8px}.tithe-month-nav strong{font-size:15px}.tithe-card{min-height:170px;padding:20px;border-radius:17px}}
