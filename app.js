@@ -165,7 +165,7 @@ document.addEventListener('visibilitychange',()=>{
   syncFailed=false;queueCloudSync();
  }
 });
-const cloudStatus=message=>{const el=$('cloudStatus');if(el)el.textContent=message};
+const cloudStatus=message=>{const el=$('cloudStatus');if(el)el.textContent=message;const connection=$('connectionStatus');if(connection){const online=navigator.onLine;connection.classList.toggle('is-offline',!online);connection.lastChild.textContent=online?'Online':'Offline'}const updated=$('syncLastUpdated');if(updated&&message==='Dados sincronizados')updated.textContent='Última atualização: '+new Date().toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit',year:'numeric'})};
 const UI_PREF_KEY='gf3_ui_preferences';
 const readUiPrefs=()=>{try{return Object.assign({theme:'light',highContrast:false,easyTouch:false},JSON.parse(localStorage.getItem(UI_PREF_KEY)||'{}'))}catch{return {theme:'light',highContrast:false,easyTouch:false}}};
 let uiPrefs=readUiPrefs();
