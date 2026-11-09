@@ -57,3 +57,15 @@
 
 .bank-card.theme-yellow{--card-accent:#d5a900;--card-bg:#fff9dc}.bank-card.theme-red{--card-accent:#d62828;--card-bg:#fff0ef}
 
+/* Reforça a identidade visual de cada cartão usando a cor escolhida no cadastro */
+.bank-card{
+  background:linear-gradient(145deg,
+    color-mix(in srgb,var(--card-accent) 12%,#fff) 0%,
+    color-mix(in srgb,var(--card-accent) 5%,#fff) 100%);
+  border:1px solid color-mix(in srgb,var(--card-accent) 34%,#e3eae5);
+  border-top:4px solid var(--card-accent);
+  box-shadow:0 6px 18px color-mix(in srgb,var(--card-accent) 16%,transparent);
+}
+.bank-card .bank-card-progress{background:color-mix(in srgb,var(--card-accent) 15%,#fff)}
+
+
