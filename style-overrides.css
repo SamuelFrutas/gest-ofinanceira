@@ -600,3 +600,23 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
  .sync-last-updated{flex-basis:auto}
  .dashboard-action-row{margin:10px 0 14px}
 }
+
+
+/* Faturas no dashboard: cartão alinhado e limite disponível em destaque */
+.dashboard-invoice-row{padding:15px 0}
+.dashboard-invoice-top{display:grid;grid-template-columns:44px minmax(0,1fr) auto;align-items:center;gap:10px}
+.dashboard-invoice-brand{grid-column:1;grid-row:1;width:44px;height:44px}
+.dashboard-invoice-heading{grid-column:2;grid-row:1;gap:4px}
+.dashboard-invoice-heading>b{width:fit-content;max-width:100%;font-size:14px;padding:6px 11px!important}
+.dashboard-invoice-count{font-size:11px}
+.dashboard-invoice-total{grid-column:3;grid-row:1;font-size:14px;padding:7px 9px}
+.dashboard-invoice-meta{margin:12px 0 9px;justify-content:space-between;font-size:12px}
+.dashboard-invoice-available{display:grid;grid-template-columns:1fr auto;align-items:center;gap:3px 8px;margin:0 0 11px;padding:10px 12px;border:1px solid #d8eadf;border-radius:12px;background:#f0f8f2}
+.dashboard-invoice-available span{font-size:12px;color:#52715d;font-weight:650}
+.dashboard-invoice-available strong{font-size:17px;color:#187a45}
+.dashboard-invoice-available small{grid-column:1/-1;color:#7b8980;font-size:11px}
+.dashboard-invoice-actions{margin:0}
+:root[data-theme="dark"] .dashboard-invoice-available{background:#20372a;border-color:#3e654b}
+:root[data-theme="dark"] .dashboard-invoice-available span,:root[data-theme="dark"] .dashboard-invoice-available small{color:#b8cfc0}
+:root[data-theme="dark"] .dashboard-invoice-available strong{color:#8ce6ae}
+@media(max-width:420px){.dashboard-invoice-top{grid-template-columns:40px minmax(0,1fr)}.dashboard-invoice-brand{width:40px;height:40px}.dashboard-invoice-total{grid-column:2;grid-row:2;justify-self:start}.dashboard-invoice-heading{grid-column:2;grid-row:1}}
