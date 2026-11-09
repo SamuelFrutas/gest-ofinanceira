@@ -408,7 +408,7 @@ function openDeleteExpense(id){
  const sequence=target.seriesId?st.expenses.filter(item=>item.seriesId===target.seriesId):[target];
  const recurring=!!target.fixed,installments=!!target.installmentTotal&&!recurring;
  if(sequence.length<=1||(!recurring&&!installments)){
-  if(confirm('Excluir esta despesa?')){st.expenses=st.expenses.filter(item=>item.id!==id);save();render()}
+  if(confirm('Excluir esta despesa?')){logActivity('Despesa excluída',target,'Lançamento excluído');st.expenses=st.expenses.filter(item=>item.id!==id);save();render()}
   return;
  }
  let modal=$('deleteExpenseModal');
