@@ -533,3 +533,14 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
  .weekly-metric strong{font-size:17px}
  .weekly-metric.open small{font-size:10px}
 }
+
+
+/* Relatórios: categorias clicáveis e detalhamento das despesas */
+.report-category-button{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:transparent;border:0;cursor:pointer;border-radius:10px;padding:12px 8px;transition:background .15s}
+.report-category-button:hover,.report-category-button:focus-visible{background:#f0f7f2;outline:2px solid #b7dfc5;outline-offset:-2px}
+.report-category-detail-card{width:min(760px,100%)}
+.report-category-detail-summary{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px 16px;margin:10px 0 14px;border-radius:14px;background:#edf7f0;color:#176b3c}
+.report-category-detail-summary strong{font-size:20px}
+@media(max-width:520px){.report-category-detail-card{padding:15px}.report-category-detail-summary strong{font-size:18px}}
+:root[data-theme="dark"] .report-category-button:hover,:root[data-theme="dark"] .report-category-button:focus-visible{background:#24392c}
+:root[data-theme="dark"] .report-category-detail-summary{background:#1d3b2a;color:#a9efc3}
