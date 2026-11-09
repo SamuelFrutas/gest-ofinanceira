@@ -580,3 +580,23 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 :root[data-theme="dark"] .topbar>.icon-btn{background:#20372a;color:#e8f5eb}
 :root[data-theme="dark"] .connection-status{background:#1d3b2a;color:#a9efc3}
 :root[data-theme="dark"] .connection-status.is-offline{background:#472b2b;color:#ffc2bd}
+
+
+/* Ajuste fino: cabeçalho compacto e sem bloco de apresentação redundante */
+.topbar{min-height:0;padding:10px 20px}
+.topbar-brand{gap:2px}
+.topbar .eyebrow{font-size:10px;letter-spacing:.14em}
+.topbar h1{font-size:24px;line-height:1.08;margin:1px 0 2px}
+.topbar-status{gap:4px 10px}
+.sync-status,.connection-status{font-size:10px}
+.connection-status{padding:3px 7px}
+.sync-last-updated{font-size:10px;flex-basis:auto}
+.dashboard-action-row{margin:12px 0 16px}
+.dashboard-action-row .primary-btn{min-height:50px}
+@media(max-width:600px){
+ .topbar{padding:9px 16px;min-height:0}
+ .topbar h1{font-size:23px}
+ .topbar-status{gap:4px 8px}
+ .sync-last-updated{flex-basis:auto}
+ .dashboard-action-row{margin:10px 0 14px}
+}
