@@ -544,3 +544,10 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 @media(max-width:520px){.report-category-detail-card{padding:15px}.report-category-detail-summary strong{font-size:18px}}
 :root[data-theme="dark"] .report-category-button:hover,:root[data-theme="dark"] .report-category-button:focus-visible{background:#24392c}
 :root[data-theme="dark"] .report-category-detail-summary{background:#1d3b2a;color:#a9efc3}
+
+/* Cartões: destacar o limite realmente disponível para novas compras */
+.bank-card-available{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding:11px 13px;border-radius:12px;background:rgba(22,135,75,.10);color:var(--text,#183326)}
+.bank-card-available span{font-size:10px;font-weight:800;letter-spacing:.07em;opacity:.78}
+.bank-card-available strong{font-size:18px;font-weight:800;color:#16834b;text-align:right}
+:root[data-theme="dark"] .bank-card-available{background:rgba(50,180,105,.15);color:var(--text)}
+:root[data-theme="dark"] .bank-card-available strong{color:#79dfa1}
