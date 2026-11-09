@@ -656,49 +656,31 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 :root[data-theme="dark"] .dashboard-invoice-limit-line>strong.is-over{background:#472b2b;color:#ffc2bd}
 
 
-/* Separação visual mais nítida entre os cartões de fatura */
-.dashboard-invoice-row{
-  background:#fff;
-  border:1px solid #d5e0d8;
-  border-radius:15px;
-  padding:14px!important;
-  margin:0 0 12px!important;
-  box-shadow:0 2px 8px rgba(29,55,39,.07);
-}
-.dashboard-invoice-row:last-child{margin-bottom:0!important}
-.dashboard-invoice-values{border-color:#e0e8e2}
-.dashboard-invoice-values>div+div{border-left-color:#dce5de}
-.dashboard-invoice-limit{background:#f2f8f4;border:1px solid #d6e8dc;border-radius:11px;padding:9px 10px}
-.dashboard-invoice-progress{background:#dce8df}
-:root[data-theme="dark"] .dashboard-invoice-row{
-  background:#202d26;
-  border-color:#526b5a;
-  box-shadow:0 2px 9px rgba(0,0,0,.2);
-}
-:root[data-theme="dark"] .dashboard-invoice-values{border-color:#405448}
-:root[data-theme="dark"] .dashboard-invoice-values>div+div{border-left-color:#405448}
-:root[data-theme="dark"] .dashboard-invoice-limit{background:#263b2e;border-color:#46634f}
-:root[data-theme="dark"] .dashboard-invoice-progress{background:#405448}
-
-
-/* Cartões de fatura claramente separados entre si */
+/* Cada fatura herda a cor escolhida no cadastro do cartão */
 .dashboard-invoice-row{
   display:block!important;
-  background:#f7faf8!important;
-  border:2px solid #c6d9cc!important;
+  background:linear-gradient(145deg,
+    color-mix(in srgb,var(--invoice-card-accent,#2876a8) 12%,#fff),
+    color-mix(in srgb,var(--invoice-card-accent,#2876a8) 4%,#fff) 78%)!important;
+  border:1.5px solid color-mix(in srgb,var(--invoice-card-accent,#2876a8) 42%,#dce5df)!important;
+  border-top:4px solid var(--invoice-card-accent,#2876a8)!important;
   border-radius:17px!important;
   padding:14px!important;
   margin:0 0 16px!important;
-  box-shadow:0 3px 10px rgba(28,67,43,.10)!important;
+  box-shadow:0 4px 13px color-mix(in srgb,var(--invoice-card-accent,#2876a8) 15%,transparent)!important;
 }
 .dashboard-invoice-row:last-child{margin-bottom:0!important}
-.dashboard-invoice-row+.dashboard-invoice-row{border-top:2px solid #c6d9cc!important}
-.dashboard-invoice-row .dashboard-invoice-values{background:#fff;border:1px solid #e0e8e2;border-radius:10px;padding:9px 7px;margin:11px 0}
-.dashboard-invoice-row .dashboard-invoice-limit{background:#e8f4ec!important;border:1px solid #c7dfcf!important;border-radius:11px!important}
+.dashboard-invoice-row+.dashboard-invoice-row{border-top:4px solid var(--invoice-card-accent,#2876a8)!important}
+.dashboard-invoice-row .dashboard-invoice-values{background:color-mix(in srgb,var(--invoice-card-accent,#2876a8) 3%,#fff);border:1px solid color-mix(in srgb,var(--invoice-card-accent,#2876a8) 18%,#e0e8e2);border-radius:10px;padding:9px 7px;margin:11px 0}
+.dashboard-invoice-row .dashboard-invoice-limit{background:color-mix(in srgb,var(--invoice-card-accent,#2876a8) 11%,#fff)!important;border:1px solid color-mix(in srgb,var(--invoice-card-accent,#2876a8) 30%,#e0e8e2)!important;border-radius:11px!important}
+.dashboard-invoice-row .dashboard-invoice-progress{background:color-mix(in srgb,var(--invoice-card-accent,#2876a8) 18%,#fff)}
+.dashboard-invoice-row .dashboard-invoice-progress>span{background:var(--invoice-card-accent,#2876a8)}
 :root[data-theme="dark"] .dashboard-invoice-row{
-  background:#26342c!important;border-color:#64816c!important;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--invoice-card-accent,#2876a8) 22%,#202d26),#202d26 82%)!important;
+  border-color:color-mix(in srgb,var(--invoice-card-accent,#2876a8) 55%,#526b5a)!important;
+  border-top-color:var(--invoice-card-accent,#2876a8)!important;
   box-shadow:0 3px 12px rgba(0,0,0,.28)!important
 }
-:root[data-theme="dark"] .dashboard-invoice-row+.dashboard-invoice-row{border-top-color:#64816c!important}
-:root[data-theme="dark"] .dashboard-invoice-row .dashboard-invoice-values{background:#202d26;border-color:#43584a}
-:root[data-theme="dark"] .dashboard-invoice-row .dashboard-invoice-limit{background:#304a38!important;border-color:#58745f!important}
+:root[data-theme="dark"] .dashboard-invoice-row+.dashboard-invoice-row{border-top-color:var(--invoice-card-accent,#2876a8)!important}
+:root[data-theme="dark"] .dashboard-invoice-row .dashboard-invoice-values{background:#202d26;border-color:color-mix(in srgb,var(--invoice-card-accent,#2876a8) 35%,#43584a)}
+:root[data-theme="dark"] .dashboard-invoice-row .dashboard-invoice-limit{background:color-mix(in srgb,var(--invoice-card-accent,#2876a8) 20%,#263b2e)!important;border-color:color-mix(in srgb,var(--invoice-card-accent,#2876a8) 45%,#46634f)!important}
