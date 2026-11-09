@@ -551,3 +551,32 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 .bank-card-available strong{font-size:18px;font-weight:800;color:#16834b;text-align:right}
 :root[data-theme="dark"] .bank-card-available{background:rgba(50,180,105,.15);color:var(--text)}
 :root[data-theme="dark"] .bank-card-available strong{color:#79dfa1}
+
+
+/* Cabeçalho principal: identidade do extrato e ação primária do dashboard */
+.topbar{height:auto;min-height:92px;padding:15px 22px;gap:16px;align-items:center}
+.topbar-brand{min-width:0;display:grid;gap:3px}
+.topbar .eyebrow{font-size:11px;letter-spacing:.16em;color:#16834b;font-weight:850}
+.topbar h1{font-size:clamp(23px,3vw,30px);line-height:1.12;letter-spacing:-.7px;margin:2px 0 4px;color:#17251d}
+.topbar-status{display:flex;align-items:center;flex-wrap:wrap;gap:7px 13px}
+.sync-status,.connection-status{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#287448}
+.sync-status i,.connection-status i{width:7px;height:7px;border-radius:50%;background:#19a45a;display:inline-block;flex:0 0 auto}
+.connection-status{padding:4px 8px;border-radius:999px;background:#eaf7ee}
+.connection-status.is-offline{color:#a33b36;background:#fff0ef}
+.connection-status.is-offline i{background:#d0443e}
+.sync-last-updated{font-size:11px;color:#78857d}
+.topbar>.icon-btn{flex:0 0 auto;width:44px;height:44px;border-radius:12px;background:#f1f7f3;font-size:26px}
+.dashboard-action-row{margin:16px 0 20px}
+.dashboard-action-row .primary-btn{width:100%;min-height:54px;border-radius:15px;font-size:17px;box-shadow:0 5px 14px #16834b20}
+.dashboard-heading{margin:8px 0 18px}
+@media(max-width:600px){
+ .topbar{padding:13px 17px;min-height:88px}
+ .topbar h1{font-size:25px}
+ .topbar-status{gap:6px 9px}
+ .sync-last-updated{flex-basis:100%}
+ .dashboard-action-row{margin:14px 0 18px}
+}
+:root[data-theme="dark"] .topbar h1{color:var(--text,#edf5ef)}
+:root[data-theme="dark"] .topbar>.icon-btn{background:#20372a;color:#e8f5eb}
+:root[data-theme="dark"] .connection-status{background:#1d3b2a;color:#a9efc3}
+:root[data-theme="dark"] .connection-status.is-offline{background:#472b2b;color:#ffc2bd}
