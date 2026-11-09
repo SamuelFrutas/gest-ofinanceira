@@ -654,3 +654,28 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 :root[data-theme="dark"] .dashboard-invoice-open{background:#263b2e;color:#c7e4d0}
 :root[data-theme="dark"] .dashboard-invoice-limit-line>strong{background:#203c2b;color:#9ee7b5}
 :root[data-theme="dark"] .dashboard-invoice-limit-line>strong.is-over{background:#472b2b;color:#ffc2bd}
+
+
+/* Separação visual mais nítida entre os cartões de fatura */
+.dashboard-invoice-row{
+  background:#fff;
+  border:1px solid #d5e0d8;
+  border-radius:15px;
+  padding:14px!important;
+  margin:0 0 12px!important;
+  box-shadow:0 2px 8px rgba(29,55,39,.07);
+}
+.dashboard-invoice-row:last-child{margin-bottom:0!important}
+.dashboard-invoice-values{border-color:#e0e8e2}
+.dashboard-invoice-values>div+div{border-left-color:#dce5de}
+.dashboard-invoice-limit{background:#f2f8f4;border:1px solid #d6e8dc;border-radius:11px;padding:9px 10px}
+.dashboard-invoice-progress{background:#dce8df}
+:root[data-theme="dark"] .dashboard-invoice-row{
+  background:#202d26;
+  border-color:#526b5a;
+  box-shadow:0 2px 9px rgba(0,0,0,.2);
+}
+:root[data-theme="dark"] .dashboard-invoice-values{border-color:#405448}
+:root[data-theme="dark"] .dashboard-invoice-values>div+div{border-left-color:#405448}
+:root[data-theme="dark"] .dashboard-invoice-limit{background:#263b2e;border-color:#46634f}
+:root[data-theme="dark"] .dashboard-invoice-progress{background:#405448}
