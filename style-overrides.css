@@ -679,3 +679,26 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 :root[data-theme="dark"] .dashboard-invoice-values>div+div{border-left-color:#405448}
 :root[data-theme="dark"] .dashboard-invoice-limit{background:#263b2e;border-color:#46634f}
 :root[data-theme="dark"] .dashboard-invoice-progress{background:#405448}
+
+
+/* Cartões de fatura claramente separados entre si */
+.dashboard-invoice-row{
+  display:block!important;
+  background:#f7faf8!important;
+  border:2px solid #c6d9cc!important;
+  border-radius:17px!important;
+  padding:14px!important;
+  margin:0 0 16px!important;
+  box-shadow:0 3px 10px rgba(28,67,43,.10)!important;
+}
+.dashboard-invoice-row:last-child{margin-bottom:0!important}
+.dashboard-invoice-row+.dashboard-invoice-row{border-top:2px solid #c6d9cc!important}
+.dashboard-invoice-row .dashboard-invoice-values{background:#fff;border:1px solid #e0e8e2;border-radius:10px;padding:9px 7px;margin:11px 0}
+.dashboard-invoice-row .dashboard-invoice-limit{background:#e8f4ec!important;border:1px solid #c7dfcf!important;border-radius:11px!important}
+:root[data-theme="dark"] .dashboard-invoice-row{
+  background:#26342c!important;border-color:#64816c!important;
+  box-shadow:0 3px 12px rgba(0,0,0,.28)!important
+}
+:root[data-theme="dark"] .dashboard-invoice-row+.dashboard-invoice-row{border-top-color:#64816c!important}
+:root[data-theme="dark"] .dashboard-invoice-row .dashboard-invoice-values{background:#202d26;border-color:#43584a}
+:root[data-theme="dark"] .dashboard-invoice-row .dashboard-invoice-limit{background:#304a38!important;border-color:#58745f!important}
