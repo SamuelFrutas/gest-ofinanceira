@@ -242,10 +242,35 @@ $('dashboardInvoices').innerHTML=invoices.length?invoices.map(x=>{const palette=
     modal.addEventListener('click',ev=>{if(ev.target===modal||ev.target.closest('[data-weekly-open-close]'))modal.classList.add('hidden')});
    }
    $('weeklyOpenPeriod').textContent=monday.toLocaleDateString('pt-BR')+' a '+sunday.toLocaleDateString('pt-BR');
-   $('weeklyOpenItems').innerHTML=weekOpenItems.length?weekOpenItems.map(e=>{
-    const balance=remaining(e),paid=Math.max(0,(+e.amount||0)-balance),due=d(e.dueDate||e.date).toLocaleDateString('pt-BR');
-    return '<article class="weekly-open-item"><div class="weekly-open-description"><b>'+esc(e.description||'Despesa sem descrição')+'</b><small>'+esc(e.category||'Sem categoria')+' · '+esc(e.type||'')+'</small><small>Vencimento: '+due+'</small></div><div class="weekly-open-values"><small>Original: '+money(e.amount)+'</small><small>Pago: '+money(paid)+'</small><strong>Saldo: '+money(balance)+'</strong></div></article>';
-   }).join(''):'<div class="empty">Não há despesas em aberto nesta semana.</div>';
+   const weeklyDisplayItems=[];
+   const weeklyCardInvoices=new Map();
+   weekOpenItems.forEach(e=>{
+    const balance=remaining(e);
+    if(e.cardId){
+     const due=String(e.dueDate||e.date).slice(0,10),key=String(e.cardId)+'|'+due;
+     let invoice=weeklyCardInvoices.get(key);
+     if(!invoice){
+      invoice={cardId:e.cardId,due,items:[],original:0,paid:0,open:0};
+      weeklyCardInvoices.set(key,invoice);
+     }
+     invoice.items.push(e);
+     invoice.original+=Math.max(0,+e.amount||0);
+     invoice.open+=balance;
+     invoice.paid+=Math.max(0,(+e.amount||0)-balance);
+    }else{
+     weeklyDisplayItems.push({kind:'expense',date:String(e.dueDate||e.date),html:(()=>{
+      const paid=Math.max(0,(+e.amount||0)-balance),due=d(e.dueDate||e.date).toLocaleDateString('pt-BR');
+      return '<article class="weekly-open-item"><div class="weekly-open-description"><b>'+esc(e.description||'Despesa sem descrição')+'</b><small>'+esc(e.category||'Sem categoria')+' · '+esc(e.type||'')+'</small><small>Vencimento: '+due+'</small></div><div class="weekly-open-values"><small>Original: '+money(e.amount)+'</small><small>Pago: '+money(paid)+'</small><strong>Saldo: '+money(balance)+'</strong></div></article>';
+     })()});
+    }
+   });
+   weeklyCardInvoices.forEach(invoice=>{
+    const card=st.cards.find(c=>String(c.id)===String(invoice.cardId));
+    const due=d(invoice.due).toLocaleDateString('pt-BR');
+    weeklyDisplayItems.push({kind:'invoice',date:invoice.due,html:'<article class="weekly-open-item weekly-open-invoice"><div class="weekly-open-description"><b>Fatura · '+esc(card?.name||'Cartão')+'</b><small>'+invoice.items.length+' compra(s) agrupada(s)</small><small>Vencimento: '+due+'</small></div><div class="weekly-open-values"><small>Valor da fatura: '+money(invoice.original)+'</small><small>Pago: '+money(invoice.paid)+'</small><strong>Saldo da fatura: '+money(invoice.open)+'</strong></div></article>'});
+   });
+   weeklyDisplayItems.sort((a,b)=>a.date.localeCompare(b.date)||a.kind.localeCompare(b.kind));
+   $('weeklyOpenItems').innerHTML=weeklyDisplayItems.length?weeklyDisplayItems.map(item=>item.html).join(''):'<div class="empty">Não há despesas em aberto nesta semana.</div>';
    $('weeklyOpenTotal').textContent=money(weekOpen);
    modal.classList.remove('hidden');
   };
