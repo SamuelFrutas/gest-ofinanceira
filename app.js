@@ -421,7 +421,7 @@ function openDeleteExpense(id){
    if(choice.dataset.deleteMode==='one')removeIds=new Set([current.id]);
    else if(choice.dataset.deleteMode==='all')removeIds=new Set(group.map(item=>item.id));
    else removeIds=new Set(group.filter(item=>current.fixed?String(item.dueDate||item.date)>=String(current.dueDate||current.date):(+item.installmentNumber||0)>=(+current.installmentNumber||0)).map(item=>item.id));
-   st.expenses=st.expenses.filter(item=>!removeIds.has(item.id));save();modal.classList.add('hidden');render();
+   const removed=group.filter(item=>removeIds.has(item.id));removed.forEach(item=>logActivity('Despesa excluída',item,choice.dataset.deleteMode==='one'?'Somente este lançamento':choice.dataset.deleteMode==='following'?'Esta e as próximas ocorrências':'Todas as ocorrências'));st.expenses=st.expenses.filter(item=>!removeIds.has(item.id));save();modal.classList.add('hidden');render();
   });
  }
  modal.dataset.targetId=id;
