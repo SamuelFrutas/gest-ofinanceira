@@ -518,3 +518,18 @@ body[data-easy-touch="true"] .icon-btn{min-width:46px;min-height:46px}
 .weekly-open-total{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:15px 0;padding:15px 2px;border-top:1px solid #e5eae6;font-weight:750}
 .weekly-open-total strong{font-size:19px;color:#b4232d;white-space:nowrap}
 @media(max-width:520px){.weekly-open-modal{padding:16px}.weekly-open-item{gap:8px;padding:11px}.weekly-open-values{font-size:12px}.weekly-open-values small{font-size:11px}}
+
+
+/* Resumo semanal: compactar os indicadores para evitar cartões altos no celular */
+.weekly-metrics{align-items:stretch;gap:9px}
+.weekly-metric{padding:10px 12px;gap:6px;align-content:center;min-height:0}
+.weekly-metric span{font-size:12px;line-height:1.2}
+.weekly-metric strong{font-size:17px;line-height:1.15}
+.weekly-metric small{font-size:11px;line-height:1.15;margin:0}
+.weekly-metric.open small{white-space:nowrap}
+@media(max-width:540px){
+ .weekly-metric{padding:10px 11px;gap:6px}
+ .weekly-metric span{font-size:12px}
+ .weekly-metric strong{font-size:17px}
+ .weekly-metric.open small{font-size:10px}
+}
