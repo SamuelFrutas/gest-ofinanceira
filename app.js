@@ -186,7 +186,97 @@ const save=()=>{
  syncPending=true;
  if(cloudReady&&cloudUser){syncFailed=false;queueCloudSync()}
 },d=s=>{let [y,m,x]=String(s).split('-').map(Number);return new Date(y,m-1,x,12)},iso=x=>`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`,days=(y,m)=>new Date(y,m,0).getDate(),add=(s,n,day)=>{let x=d(s),wanted=day??x.getDate(),z=new Date(x.getFullYear(),x.getMonth()+n,1,12);return new Date(z.getFullYear(),z.getMonth(),Math.min(wanted,days(z.getFullYear(),z.getMonth()+1)),12)},mk=x=>{x=typeof x==='string'?d(x):x;return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}`};const all=()=>st.expenses.filter(e=>!e.synthetic&&!e.adjustment),accountingDate=e=>remaining(e)<=0.005?(e.paidDate||e.dueDate||e.date):(e.dueDate||e.date),month=()=>{const selected=mk(st.month),today=iso(new Date()),current=mk(today),regular=all().filter(e=>mk(accountingDate(e))===selected);if(selected!==current)return regular;const firstDay=selected+'-01',carry=all().filter(e=>remaining(e)>0.005&&String(e.dueDate||e.date)<firstDay).map(e=>({...e,amount:remaining(e),paidAmount:0,partialPayments:[],status:'pendente'}));return [...regular,...carry.filter(e=>!regular.some(x=>x.id===e.id))]};
-function page(id,fromPop=false){if(!fromPop&&document.querySelector('.page:not(.hidden)')?.id!==id){history.pushState({gfPage:id},'',location.pathname+location.search+location.hash)}document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$(id).classList.remove('hidden');document.querySelectorAll('#mobileBottomNav [data-page]').forEach(button=>{const active=button.dataset.page===id;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});closeDrawer();({dashboard:dash,expenses:list,cards:cards,reports:report,tithe:tithe,settings:settings,cardDetail:invoice,categoryDetail:categoryDetail,calendar:calendar,categories:categories,activity:activity}[id]||dash)()}history.replaceState({gfPage:document.querySelector('.page:not(.hidden)')?.id||'dashboard'},'',location.pathname+location.search+location.hash);window.addEventListener('popstate',event=>{const target=event.state?.gfPage;if(target&&$(target))page(target,true);else page('dashboard',true)});
+
+let pendingImportRows=[];
+const importHeaders=['descricao','valor','data','tipo','categoria','subcategoria','pagamento','cartao','vencimento','status','data_pagamento','observacao'];
+function normalizeImportText(value){return String(value??'').trim().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase()}
+function parseImportDate(value){
+ const raw=String(value??'').trim();if(!raw)return '';
+ if(/^\\d{4}-\\d{2}-\\d{2}$/.test(raw))return raw;
+ const match=raw.match(/^(\\d{1,2})[\\/. -](\\d{1,2})[\\/. -](\\d{4})$/);
+ if(!match)return '';
+ const day=+match[1],month=+match[2],year=+match[3],date=new Date(year,month-1,day,12);
+ return date.getFullYear()===year&&date.getMonth()===month-1&&date.getDate()===day?iso(date):'';
+}
+function parseImportCSVLine(line,delimiter){
+ const values=[];let value='',quoted=false;
+ for(let i=0;i<line.length;i++){const char=line[i];if(char==='"'){if(quoted&&line[i+1]==='"'){value+='"';i++}else quoted=!quoted}else if(char===delimiter&&!quoted){values.push(value.trim());value=''}else value+=char}
+ values.push(value.trim());return values;
+}
+function analyzeImportCSV(source){
+ const lines=String(source||'').replace(/^\\uFEFF/,'').split(/\\r?\\n/).filter(line=>line.trim());
+ if(lines.length<2)throw new Error('O arquivo precisa ter uma linha de cabeçalho e pelo menos um lançamento.');
+ const first=lines[0],delimiter=['; ', ';',',','\\t'].map(x=>x==='; '?' ;':x).sort((a,b)=>first.split(b).length-first.split(a).length)[0]||';';
+ const headers=parseImportCSVLine(first,delimiter).map(normalizeImportText);
+ const aliases={descricao:['descricao','description'],valor:['valor','amount'],data:['data','date'],tipo:['tipo','type'],categoria:['categoria','category'],subcategoria:['subcategoria','subcategory'],pagamento:['pagamento','forma de pagamento','payment'],cartao:['cartao','cartao de credito','card'],vencimento:['vencimento','data de vencimento','due date'],status:['status','situacao'],data_pagamento:['data pagamento','data_pagamento','paid date'],observacao:['observacao','nota','note']};
+ const positions={};Object.entries(aliases).forEach(([key,names])=>{positions[key]=headers.findIndex(h=>names.includes(h))});
+ ['descricao','valor','data','tipo','categoria','pagamento'].forEach(key=>{if(positions[key]<0)throw new Error('Coluna obrigatória ausente: '+key+'. Baixe o modelo de importação para usar os nomes corretos.')});
+ const seen=new Set();
+ return lines.slice(1).map((line,index)=>{
+  const cells=parseImportCSVLine(line,delimiter),get=key=>positions[key]>=0?(cells[positions[key]]||'').trim():'';
+  const description=get('descricao'),amount=pm(get('valor')),date=parseImportDate(get('data')),type=get('tipo'),category=get('categoria'),subcategory=get('subcategoria'),payment=get('pagamento'),cardName=get('cartao'),dueInput=parseImportDate(get('vencimento')),status=normalizeImportText(get('status')||'pendente'),paidDate=parseImportDate(get('data_pagamento')),note=get('observacao');
+  const row={description,amount,date,type,category,subcategory,payment,cardName,dueInput,status,paidDate,note,line:index+2,error:'',duplicate:false,cardId:null};
+  if(!description)row.error='Descrição não informada';
+  else if(!(amount>0))row.error='Valor inválido';
+  else if(!date)row.error='Data inválida (use DD/MM/AAAA ou AAAA-MM-DD)';
+  else if(!['pessoal','empresa'].includes(normalizeImportText(type)))row.error='Tipo deve ser Pessoal ou Empresa';
+  else if(!st.categories.includes(category))row.error='Categoria não encontrada no sistema';
+  else if(!['conta bancaria','cartao de credito'].includes(normalizeImportText(payment)))row.error='Pagamento deve ser Conta bancária ou Cartão de crédito';
+  else if(status==='parcial')row.error='Importação de pagamento parcial não está disponível; use Pendente ou Pago';
+  else if(!['pendente','pago'].includes(status))row.error='Status deve ser Pendente ou Pago';
+  else if(status==='pago'&&!parseImportDate(paidDate||date))row.error='Data de pagamento inválida';
+  else if(normalizeImportText(payment)==='cartao de credito'){
+   const card=st.cards.find(c=>normalizeImportText(c.name)===normalizeImportText(cardName)||normalizeImportText(c.bank)===normalizeImportText(cardName));
+   if(!card)row.error=cardName?'Cartão não encontrado: '+cardName:'Informe o nome do cartão';
+   else row.cardId=card.id;
+  }
+  if(!row.error){
+   const key=[normalizeImportText(description),Math.round(amount*100),date,normalizeImportText(category),normalizeImportText(type),normalizeImportText(payment),row.cardId||''].join('|');
+   row.duplicate=all().some(e=>[normalizeImportText(e.description),Math.round((+e.amount||0)*100),String(e.date||''),normalizeImportText(e.category),normalizeImportText(e.type),normalizeImportText(e.payment),e.cardId||''].join('|')===key)||seen.has(key);
+   seen.add(key);
+  }
+  return row;
+ });
+}
+function imports(){
+ const summary=$('importSummary'),table=$('importPreviewTable'),confirmButton=$('confirmImportButton');
+ if(!summary||!table||!confirmButton)return;
+ if(!pendingImportRows.length){summary.textContent='Selecione um arquivo CSV para visualizar os lançamentos antes de salvar.';table.innerHTML='<div class="import-empty">Nenhum arquivo selecionado.</div>';confirmButton.disabled=true;return}
+ const valid=pendingImportRows.filter(row=>!row.error&&!row.duplicate),errors=pendingImportRows.filter(row=>row.error),duplicates=pendingImportRows.filter(row=>row.duplicate);
+ summary.textContent=pendingImportRows.length+' linha(s) analisada(s) · '+valid.length+' pronta(s) · '+errors.length+' com erro · '+duplicates.length+' duplicada(s) ignorada(s).';
+ table.innerHTML='<div class="import-table-wrap"><table class="import-table"><thead><tr><th>Linha</th><th>Descrição</th><th>Valor</th><th>Data</th><th>Tipo</th><th>Categoria</th><th>Situação</th></tr></thead><tbody>'+pendingImportRows.map(row=>'<tr><td>'+row.line+'</td><td>'+esc(row.description||'—')+'</td><td>'+money(row.amount)+'</td><td>'+esc(row.date||'—')+'</td><td>'+esc(row.type||'—')+'</td><td>'+esc(row.category||'—')+'</td><td><span class="import-row-status '+(row.error?'error':row.duplicate?'duplicate':'ready')+'">'+esc(row.error|| (row.duplicate?'Duplicado — não será importado':'Pronto'))+'</span></td></tr>').join('')+'</tbody></table></div>';
+ confirmButton.disabled=valid.length===0;
+}
+function initImportUI(){
+ const file=$('importCsvFile'),template=$('downloadImportTemplate'),clear=$('clearImportButton'),confirmButton=$('confirmImportButton');
+ if(!file||!template||!clear||!confirmButton)return;
+ file.addEventListener('change',()=>{
+  const selected=file.files?.[0];if(!selected)return;
+  const reader=new FileReader();
+  reader.onload=()=>{try{pendingImportRows=analyzeImportCSV(reader.result);imports()}catch(error){pendingImportRows=[];$('importSummary').textContent=error.message;$('importPreviewTable').innerHTML='<div class="import-empty import-error">'+esc(error.message)+'</div>';confirmButton.disabled=true}};
+  reader.onerror=()=>{$('importSummary').textContent='Não foi possível ler o arquivo.'};
+  reader.readAsText(selected,'UTF-8');
+ });
+ template.addEventListener('click',()=>{
+  const csv='\\uFEFF'+importHeaders.join(';')+'\\r\\n';
+  const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),link=document.createElement('a');
+  link.href=url;link.download='modelo-importacao-lancamentos.csv';link.click();URL.revokeObjectURL(url);
+ });
+ clear.addEventListener('click',()=>{pendingImportRows=[];file.value='';imports()});
+ confirmButton.addEventListener('click',async()=>{
+  const rows=pendingImportRows.filter(row=>!row.error&&!row.duplicate);
+  if(!rows.length)return;
+  if(!cloudReady||!cloudUser){$('importSummary').textContent='Entre novamente no sistema e aguarde a sincronização com a nuvem antes de importar.';return}
+  const expenses=rows.map(row=>({id:uid(),createdAt:Date.now(),description:row.description,amount:row.amount,date:row.date,dueDate:row.cardId?cardDue(row.date,st.cards.find(card=>card.id===row.cardId)||{}):(row.dueInput||row.date),category:row.category,subcategory:row.subcategory||'',type:normalizeImportText(row.type)==='empresa'?'Empresa':'Pessoal',payment:normalizeImportText(row.payment)==='cartao de credito'?'Cartão de crédito':'Conta bancária',cardId:row.cardId||null,note:row.note||'',status:row.status==='pago'?'pago':'pendente',paidDate:row.status==='pago'?(row.paidDate||row.date):null,paidAmount:row.status==='pago'?row.amount:0}));
+  confirmButton.disabled=true;confirmButton.textContent='Salvando...';
+  st.expenses.push(...expenses);save();
+  try{await cloudWrite;if(!syncPending&&!syncFailed){$('importSummary').textContent=expenses.length+' lançamento(s) importado(s) e sincronizado(s) com sucesso.';pendingImportRows=[];file.value='';imports()}else{$('importSummary').textContent='Os lançamentos foram adicionados neste aparelho, mas a sincronização com a nuvem ainda está pendente. O sistema tentará novamente automaticamente.'}}
+  catch(error){$('importSummary').textContent='Falha ao sincronizar. Os dados permanecem salvos neste aparelho e o sistema tentará novamente.'}
+  confirmButton.textContent='Confirmar e salvar lançamentos';imports();
+ });
+}
+
+function page(id,fromPop=false){if(!fromPop&&document.querySelector('.page:not(.hidden)')?.id!==id){history.pushState({gfPage:id},'',location.pathname+location.search+location.hash)}document.querySelectorAll('.page').forEach(x=>x.classList.add('hidden'));$(id).classList.remove('hidden');document.querySelectorAll('#mobileBottomNav [data-page]').forEach(button=>{const active=button.dataset.page===id;button.classList.toggle('active',active);if(active)button.setAttribute('aria-current','page');else button.removeAttribute('aria-current')});closeDrawer();({dashboard:dash,expenses:list,cards:cards,reports:report,tithe:tithe,settings:settings,cardDetail:invoice,categoryDetail:categoryDetail,calendar:calendar,categories:categories,activity:activity,imports:imports}[id]||dash)()}history.replaceState({gfPage:document.querySelector('.page:not(.hidden)')?.id||'dashboard'},'',location.pathname+location.search+location.hash);window.addEventListener('popstate',event=>{const target=event.state?.gfPage;if(target&&$(target))page(target,true);else page('dashboard',true)});
 function logActivity(action,e,details=''){st.activityLog=Array.isArray(st.activityLog)?st.activityLog:[];const activityCard=e?.cardId?st.cards.find(c=>c.id===e.cardId):null;st.activityLog.unshift({id:uid(),timestamp:Date.now(),action,description:e?.description||'Despesa',amount:+e?.amount||0,type:e?.type||'',category:e?.category||'',payment:e?.payment||'',cardName:activityCard?.name||'',details});st.activityLog=st.activityLog.slice(0,300);try{localStorage.setItem(K,JSON.stringify(st))}catch(error){console.error('Não foi possível salvar o histórico localmente:',error)}save();if(document.querySelector('#activity:not(.hidden)'))activity()}
 function activity(){const logs=(Array.isArray(st.activityLog)?st.activityLog:[]).slice().sort((a,b)=>(+b.timestamp||0)-(+a.timestamp||0));$('activityList').innerHTML=logs.length?logs.slice(0,100).map(x=>{const date=new Date(+x.timestamp||0);const matches=all().filter(e=>e.description===(x.description||'Despesa')&&(+e.amount||0)===(+x.amount||0)&&e.type===(x.type||'')&&(e.category||'')===(x.category||'')&&(Math.abs((+e.createdAt||0)-(+x.timestamp||0))<=120000||new Date((e.date||'')+'T12:00:00').toLocaleDateString('pt-BR')===date.toLocaleDateString('pt-BR')));const recovered=matches.length&&matches.every(e=>e.payment===matches[0].payment&&e.cardId===matches[0].cardId)?matches[0]:null;const payment=x.payment||recovered?.payment||'';const cardName=x.cardName||(recovered?.cardId?st.cards.find(c=>c.id===recovered.cardId)?.name:'')||'';return '<article class="expense-row"><div class="expense-info"><b>'+esc(x.action||'Atividade registrada')+'</b><small>'+esc(x.description||'Despesa')+' · '+esc(x.type||'')+'</small><small class="activity-payment">'+(payment==='Cartão de crédito'?'Cartão de crédito'+(cardName?' · '+esc(cardName):''):payment?esc(payment):'Forma de pagamento não informada')+'</small><small>'+date.toLocaleDateString('pt-BR')+' às '+date.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+(x.details?' · '+esc(x.details):'')+'</small><strong>'+money(x.amount)+'</strong></div></article>'}).join(''):'<div class="empty">Ainda não há registros. Novos lançamentos, edições, pagamentos e exclusões aparecerão aqui.</div>'}
 document.addEventListener('click',event=>{if(event.target.closest('#refreshActivity')){activity();const button=$('refreshActivity');if(button){button.textContent='Atualizado';setTimeout(()=>{button.textContent='Atualizar'},1200)}}});
@@ -367,6 +457,7 @@ function openCategoryManager(name){managingCategory=name;editingSubcategory=null
 function renderCategoryManager(){const name=managingCategory;if(!name)return;$('categoryManagerTitle').textContent=name;$('categoryManagerSubcategoryList').innerHTML=(st.subcategories[name]||[]).map((sub,i)=>`<div class="subcategory-row"><span>${esc(sub)}</span><div class="row-actions"><button type="button" class="mini-btn" data-edit-subcategory="${i}">Editar</button><button type="button" class="mini-btn danger" data-delete-subcategory="${i}">Excluir</button></div></div>`).join('')||'<p class="muted">Ainda não há subcategorias nesta categoria.</p>';const color=categoryColor(name,st.categories.indexOf(name));$('categoryManagerColor').style.background=color;$('subcategoryName').value=editingSubcategory===null?'':(st.subcategories[name]||[])[editingSubcategory]||'';$('saveSubcategoryButton').textContent=editingSubcategory===null?'Adicionar subcategoria':'Salvar subcategoria';$('cancelSubcategoryEdit').classList.toggle('hidden',editingSubcategory===null)}
 document.addEventListener('click',e=>{const editSub=e.target.closest('[data-edit-subcategory]');if(editSub){editingSubcategory=+editSub.dataset.editSubcategory;renderCategoryManager();return}const delSub=e.target.closest('[data-delete-subcategory]');if(delSub){const items=st.subcategories[managingCategory]||[],idx=+delSub.dataset.deleteSubcategory;if(!confirm('Excluir esta subcategoria? As despesas antigas continuarão registradas.'))return;items.splice(idx,1);st.subcategories[managingCategory]=items;save();renderCategoryManager();return}const edit=e.target.closest('[data-cat-edit]');const del=e.target.closest('[data-cat]');if(edit){e.preventDefault();openCategoryEditor(edit.dataset.catEdit);return}if(del){e.preventDefault();const name=del.dataset.cat;if(!confirm('Excluir a categoria '+name+' das opções atuais? As despesas antigas continuarão registradas com esse nome.'))return;st.categories=st.categories.filter(c=>c!==name);if(st.categoryColors)delete st.categoryColors[name];if(st.categoryTypes)delete st.categoryTypes[name];delete st.subcategories[name];save();fill();categories();dash();report()}});
 function render(){page(document.querySelector('.page:not(.hidden)')?.id||'dashboard')}
+initImportUI();
 $('categoryDetailPrev').onclick=()=>{categoryView.month=iso(add(categoryView.month+'-01',-1,1)).slice(0,7);categoryDetail()};$('categoryDetailNext').onclick=()=>{categoryView.month=iso(add(categoryView.month+'-01',1,1)).slice(0,7);categoryDetail()};$('expensesPrevMonth').onclick=()=>changeMonth('expensesMonth',-1);$('expensesNextMonth').onclick=()=>changeMonth('expensesMonth',1);$('cardStatusFilter').onchange=cards;$('cardsPrevMonth').onclick=()=>changeMonth('cardsMonth',-1);$('cardsNextMonth').onclick=()=>changeMonth('cardsMonth',1);$('cardDetailPrevMonth').onclick=()=>changeMonth('cardsMonth',-1);$('cardDetailNextMonth').onclick=()=>changeMonth('cardsMonth',1);$('prevMonth').onclick=()=>{st.month=iso(add(st.month,-1,1));save();dash()};$('nextMonth').onclick=()=>{st.month=iso(add(st.month,1,1));save();dash()};$('newExpense').onclick=$('newExpense2').onclick=()=>openExpense();$('closeExpenseModal').onclick=()=>$('expenseModal').classList.add('hidden');$('expensePayment').onchange=toggle;$('expenseStatus').onchange=toggle;$('expenseInstallment').onchange=toggle;$('expenseFixed').onchange=toggle;$('expenseForm').onsubmit=e=>{e.preventDefault();saveExpense(Object.fromEntries(new FormData(e.target)))};let calcExpression='0',calcResult=null;
 const expenseAmountInput=$('expenseAmount');
 function formatExpenseAmount(){
