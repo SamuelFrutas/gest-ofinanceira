@@ -187,13 +187,13 @@ const save=()=>{
  if(cloudReady&&cloudUser){syncFailed=false;queueCloudSync()}
 },d=s=>{let [y,m,x]=String(s).split('-').map(Number);return new Date(y,m-1,x,12)},iso=x=>`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`,days=(y,m)=>new Date(y,m,0).getDate(),add=(s,n,day)=>{let x=d(s),wanted=day??x.getDate(),z=new Date(x.getFullYear(),x.getMonth()+n,1,12);return new Date(z.getFullYear(),z.getMonth(),Math.min(wanted,days(z.getFullYear(),z.getMonth()+1)),12)},mk=x=>{x=typeof x==='string'?d(x):x;return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}`};const all=()=>st.expenses.filter(e=>!e.synthetic&&!e.adjustment),accountingDate=e=>remaining(e)<=0.005?(e.paidDate||e.dueDate||e.date):(e.dueDate||e.date),month=()=>{const selected=mk(st.month),today=iso(new Date()),current=mk(today),regular=all().filter(e=>mk(accountingDate(e))===selected);if(selected!==current)return regular;const firstDay=selected+'-01',carry=all().filter(e=>remaining(e)>0.005&&String(e.dueDate||e.date)<firstDay).map(e=>({...e,amount:remaining(e),paidAmount:0,partialPayments:[],status:'pendente'}));return [...regular,...carry.filter(e=>!regular.some(x=>x.id===e.id))]};
 
-let pendingImportRows=[];
+let pendingImportRows=[],importNotice='';
 const importHeaders=['descricao','valor','data','tipo','categoria','subcategoria','pagamento','cartao','vencimento','status','data_pagamento','observacao'];
-function normalizeImportText(value){return String(value??'').trim().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLowerCase()}
+function normalizeImportText(value){return String(value??'').trim().normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
 function parseImportDate(value){
  const raw=String(value??'').trim();if(!raw)return '';
- if(/^\\d{4}-\\d{2}-\\d{2}$/.test(raw))return raw;
- const match=raw.match(/^(\\d{1,2})[\\/. -](\\d{1,2})[\\/. -](\\d{4})$/);
+ if(/^\d{4}-\d{2}-\d{2}$/.test(raw))return raw;
+ const match=raw.match(/^(\d{1,2})[\/. -](\d{1,2})[\/. -](\d{4})$/);
  if(!match)return '';
  const day=+match[1],month=+match[2],year=+match[3],date=new Date(year,month-1,day,12);
  return date.getFullYear()===year&&date.getMonth()===month-1&&date.getDate()===day?iso(date):'';
@@ -204,9 +204,9 @@ function parseImportCSVLine(line,delimiter){
  values.push(value.trim());return values;
 }
 function analyzeImportCSV(source){
- const lines=String(source||'').replace(/^\\uFEFF/,'').split(/\\r?\\n/).filter(line=>line.trim());
+ const lines=String(source||'').replace(/^\uFEFF/,'').split(/\r?\n/).filter(line=>line.trim());
  if(lines.length<2)throw new Error('O arquivo precisa ter uma linha de cabeçalho e pelo menos um lançamento.');
- const first=lines[0],delimiter=['; ', ';',',','\\t'].map(x=>x==='; '?' ;':x).sort((a,b)=>first.split(b).length-first.split(a).length)[0]||';';
+ const first=lines[0],delimiter=first.includes(';')?';':first.includes('\t')?'\t':',';
  const headers=parseImportCSVLine(first,delimiter).map(normalizeImportText);
  const aliases={descricao:['descricao','description'],valor:['valor','amount'],data:['data','date'],tipo:['tipo','type'],categoria:['categoria','category'],subcategoria:['subcategoria','subcategory'],pagamento:['pagamento','forma de pagamento','payment'],cartao:['cartao','cartao de credito','card'],vencimento:['vencimento','data de vencimento','due date'],status:['status','situacao'],data_pagamento:['data pagamento','data_pagamento','paid date'],observacao:['observacao','nota','note']};
  const positions={};Object.entries(aliases).forEach(([key,names])=>{positions[key]=headers.findIndex(h=>names.includes(h))});
@@ -241,7 +241,7 @@ function analyzeImportCSV(source){
 function imports(){
  const summary=$('importSummary'),table=$('importPreviewTable'),confirmButton=$('confirmImportButton');
  if(!summary||!table||!confirmButton)return;
- if(!pendingImportRows.length){summary.textContent='Selecione um arquivo CSV para visualizar os lançamentos antes de salvar.';table.innerHTML='<div class="import-empty">Nenhum arquivo selecionado.</div>';confirmButton.disabled=true;return}
+ if(!pendingImportRows.length){summary.textContent=importNotice||'Selecione um arquivo CSV para visualizar os lançamentos antes de salvar.';table.innerHTML='<div class="import-empty">Nenhum arquivo selecionado.</div>';confirmButton.disabled=true;return}
  const valid=pendingImportRows.filter(row=>!row.error&&!row.duplicate),errors=pendingImportRows.filter(row=>row.error),duplicates=pendingImportRows.filter(row=>row.duplicate);
  summary.textContent=pendingImportRows.length+' linha(s) analisada(s) · '+valid.length+' pronta(s) · '+errors.length+' com erro · '+duplicates.length+' duplicada(s) ignorada(s).';
  table.innerHTML='<div class="import-table-wrap"><table class="import-table"><thead><tr><th>Linha</th><th>Descrição</th><th>Valor</th><th>Data</th><th>Tipo</th><th>Categoria</th><th>Situação</th></tr></thead><tbody>'+pendingImportRows.map(row=>'<tr><td>'+row.line+'</td><td>'+esc(row.description||'—')+'</td><td>'+money(row.amount)+'</td><td>'+esc(row.date||'—')+'</td><td>'+esc(row.type||'—')+'</td><td>'+esc(row.category||'—')+'</td><td><span class="import-row-status '+(row.error?'error':row.duplicate?'duplicate':'ready')+'">'+esc(row.error|| (row.duplicate?'Duplicado — não será importado':'Pronto'))+'</span></td></tr>').join('')+'</tbody></table></div>';
@@ -253,16 +253,16 @@ function initImportUI(){
  file.addEventListener('change',()=>{
   const selected=file.files?.[0];if(!selected)return;
   const reader=new FileReader();
-  reader.onload=()=>{try{pendingImportRows=analyzeImportCSV(reader.result);imports()}catch(error){pendingImportRows=[];$('importSummary').textContent=error.message;$('importPreviewTable').innerHTML='<div class="import-empty import-error">'+esc(error.message)+'</div>';confirmButton.disabled=true}};
+  reader.onload=()=>{try{importNotice='';pendingImportRows=analyzeImportCSV(reader.result);imports()}catch(error){importNotice=error.message;pendingImportRows=[];$('importSummary').textContent=error.message;$('importPreviewTable').innerHTML='<div class="import-empty import-error">'+esc(error.message)+'</div>';confirmButton.disabled=true}};
   reader.onerror=()=>{$('importSummary').textContent='Não foi possível ler o arquivo.'};
   reader.readAsText(selected,'UTF-8');
  });
  template.addEventListener('click',()=>{
-  const csv='\\uFEFF'+importHeaders.join(';')+'\\r\\n';
+  const csv='\uFEFF'+importHeaders.join(';')+'\r\n';
   const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'})),link=document.createElement('a');
   link.href=url;link.download='modelo-importacao-lancamentos.csv';link.click();URL.revokeObjectURL(url);
  });
- clear.addEventListener('click',()=>{pendingImportRows=[];file.value='';imports()});
+ clear.addEventListener('click',()=>{pendingImportRows=[];importNotice='';file.value='';imports()});
  confirmButton.addEventListener('click',async()=>{
   const rows=pendingImportRows.filter(row=>!row.error&&!row.duplicate);
   if(!rows.length)return;
@@ -270,9 +270,9 @@ function initImportUI(){
   const expenses=rows.map(row=>({id:uid(),createdAt:Date.now(),description:row.description,amount:row.amount,date:row.date,dueDate:row.cardId?cardDue(row.date,st.cards.find(card=>card.id===row.cardId)||{}):(row.dueInput||row.date),category:row.category,subcategory:row.subcategory||'',type:normalizeImportText(row.type)==='empresa'?'Empresa':'Pessoal',payment:normalizeImportText(row.payment)==='cartao de credito'?'Cartão de crédito':'Conta bancária',cardId:row.cardId||null,note:row.note||'',status:row.status==='pago'?'pago':'pendente',paidDate:row.status==='pago'?(row.paidDate||row.date):null,paidAmount:row.status==='pago'?row.amount:0}));
   confirmButton.disabled=true;confirmButton.textContent='Salvando...';
   st.expenses.push(...expenses);save();
-  try{await cloudWrite;if(!syncPending&&!syncFailed){$('importSummary').textContent=expenses.length+' lançamento(s) importado(s) e sincronizado(s) com sucesso.';pendingImportRows=[];file.value='';imports()}else{$('importSummary').textContent='Os lançamentos foram adicionados neste aparelho, mas a sincronização com a nuvem ainda está pendente. O sistema tentará novamente automaticamente.'}}
-  catch(error){$('importSummary').textContent='Falha ao sincronizar. Os dados permanecem salvos neste aparelho e o sistema tentará novamente.'}
-  confirmButton.textContent='Confirmar e salvar lançamentos';imports();
+  try{await cloudWrite;if(!syncPending&&!syncFailed){importNotice=expenses.length+' lançamento(s) importado(s) e sincronizado(s) com sucesso.'}else{importNotice='Os '+expenses.length+' lançamento(s) foram adicionados neste aparelho, mas a sincronização com a nuvem ainda está pendente. O sistema tentará novamente automaticamente.'}}
+  catch(error){importNotice='Falha ao sincronizar. Os dados permanecem salvos neste aparelho e o sistema tentará novamente.'}
+  pendingImportRows=[];file.value='';confirmButton.textContent='Confirmar e salvar lançamentos';imports();
  });
 }
 
