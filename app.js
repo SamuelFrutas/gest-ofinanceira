@@ -271,7 +271,20 @@ function initImportUI(){
   if(!cloudReady||!cloudUser){$('importSummary').textContent='Entre novamente no sistema e aguarde a sincronização com a nuvem antes de importar.';return}
   const expenses=rows.map(row=>({id:uid(),createdAt:Date.now(),description:row.description,amount:row.amount,date:row.date,dueDate:row.cardId?cardDue(row.date,st.cards.find(card=>card.id===row.cardId)||{}):(row.dueInput||row.date),category:row.category,subcategory:row.subcategory||'',type:normalizeImportText(row.type)==='empresa'?'Empresa':'Pessoal',payment:normalizeImportText(row.payment)==='cartao de credito'?'Cartão de crédito':'Conta bancária',cardId:row.cardId||null,note:row.note||'',status:row.status==='pago'?'pago':'pendente',paidDate:row.status==='pago'?(row.paidDate||row.date):null,paidAmount:row.status==='pago'?row.amount:0}));
   confirmButton.disabled=true;confirmButton.textContent='Salvando...';
-  st.expenses.push(...expenses);save();
+  st.expenses.push(...expenses);
+  st.activityLog=Array.isArray(st.activityLog)?st.activityLog:[];
+  const activityTimestamp=Date.now();
+  expenses.forEach((expense,index)=>{
+   const activityCard=expense.cardId?st.cards.find(card=>card.id===expense.cardId):null;
+   st.activityLog.unshift({
+    id:uid(),timestamp:activityTimestamp+index,action:'Despesa importada',
+    description:expense.description||'Despesa',amount:+expense.amount||0,
+    type:expense.type||'',category:expense.category||'',payment:expense.payment||'',
+    cardName:activityCard?.name||'',details:'Importação de lançamentos'
+   });
+  });
+  st.activityLog=st.activityLog.slice(0,300);
+  save();
   try{await cloudWrite;if(!syncPending&&!syncFailed){importNotice=expenses.length+' lançamento(s) importado(s) e sincronizado(s) com sucesso.'}else{importNotice='Os '+expenses.length+' lançamento(s) foram adicionados neste aparelho, mas a sincronização com a nuvem ainda está pendente. O sistema tentará novamente automaticamente.'}}
   catch(error){importNotice='Falha ao sincronizar. Os dados permanecem salvos neste aparelho e o sistema tentará novamente.'}
   pendingImportRows=[];file.value='';confirmButton.textContent='Confirmar e salvar lançamentos';imports();
