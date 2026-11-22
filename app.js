@@ -219,6 +219,7 @@ function analyzeImportCSV(source){
   if(!description)row.error='Descrição não informada';
   else if(!(amount>0))row.error='Valor inválido';
   else if(!date)row.error='Data inválida (use DD/MM/AAAA ou AAAA-MM-DD)';
+  else if(get('vencimento')&&!dueInput)row.error='Data de vencimento inválida';
   else if(!['pessoal','empresa'].includes(normalizeImportText(type)))row.error='Tipo deve ser Pessoal ou Empresa';
   else if(!st.categories.includes(category))row.error='Categoria não encontrada no sistema';
   else if(!['conta bancaria','cartao de credito'].includes(normalizeImportText(payment)))row.error='Pagamento deve ser Conta bancária ou Cartão de crédito';
