@@ -226,10 +226,11 @@ function analyzeImportCSV(source){
   else if(status==='parcial')row.error='Importação de pagamento parcial não está disponível; use Pendente ou Pago';
   else if(!['pendente','pago'].includes(status))row.error='Status deve ser Pendente ou Pago';
   else if(status==='pago'&&!parseImportDate(paidDate||date))row.error='Data de pagamento inválida';
+  else if(subcategory&&!(st.subcategories?.[category]||[]).includes(subcategory))row.error='Subcategoria não encontrada nesta categoria';
   else if(normalizeImportText(payment)==='cartao de credito'){
-   const card=st.cards.find(c=>normalizeImportText(c.name)===normalizeImportText(cardName)||normalizeImportText(c.bank)===normalizeImportText(cardName));
-   if(!card)row.error=cardName?'Cartão não encontrado: '+cardName:'Informe o nome do cartão';
-   else row.cardId=card.id;
+   const matches=st.cards.filter(c=>normalizeImportText(c.name)===normalizeImportText(cardName));
+   if(matches.length!==1)row.error=cardName?(matches.length?'Há mais de um cartão com esse nome; use um nome exclusivo':'Cartão não encontrado: '+cardName):'Informe o nome exato do cartão';
+   else row.cardId=matches[0].id;
   }
   if(!row.error){
    const key=[normalizeImportText(description),Math.round(amount*100),date,normalizeImportText(category),normalizeImportText(type),normalizeImportText(payment),row.cardId||''].join('|');
